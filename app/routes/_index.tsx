@@ -35,6 +35,7 @@ import {
 } from '@chakra-ui/icons';
 import { Link as RemixLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
+import { qualifierSongs } from '~/utils/qualifierSongs';
 
 const pictureFadeIn = keyframes({
   '0%': {
@@ -78,7 +79,7 @@ const qualifierAnimation = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: 0.2 + 0.15 * index,
+      delay: 0.1 + 0.15 * index,
       duration: 0.65,
     },
   }),
@@ -120,14 +121,12 @@ const Index = () => {
               Register
             </Button>
           </Link>
-          <Box flex="1">
-            <RemixLink to="/rules">
-              <Button size="lg" w="100%" colorScheme="gray">
-                Rules
-              </Button>
-            </RemixLink>
-          </Box>
-          <Link flex="1">
+          <Link as={RemixLink} to="/rules" flex="1">
+            <Button size="lg" w="100%" colorScheme="gray">
+              Rules
+            </Button>
+          </Link>
+          <Link as={RemixLink} to="/qualifiers" flex="1">
             <Button size="lg" variant="outline" w="100%">
               Submit Qualifiers
             </Button>
@@ -276,20 +275,7 @@ const Index = () => {
             </Text>
           </Flex>
           <SimpleGrid columns={[1, 2, 3, 4]} spacing={[4, 6, 6, 10]}>
-            {[
-              { difficulty: 'S10' },
-              { difficulty: 'S12' },
-              { difficulty: 'S14' },
-              {
-                name: 'A Site De La Rue',
-                difficulty: 'S16',
-                image: aSiteDeLaRue,
-              },
-              { difficulty: 'S18' },
-              { name: 'Sarabande', difficulty: 'S20', image: sarabande },
-              { name: 'Skeptic', difficulty: 'S22', image: skeptic },
-              { difficulty: 'D24', border: 'green.400' },
-            ].map((song, i) => (
+            {qualifierSongs.map((song, i) => (
               <motion.div
                 key={song.difficulty}
                 variants={qualifierAnimation}

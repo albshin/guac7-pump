@@ -32,6 +32,7 @@ Rules are subject to change **within reason** to accomodate schedule changes or 
 If you have any questions about the ruleset or tournament, please reach out to me through Discord.
 
 ### 💰 Prizes
+Prize pool will increase based on number of entrants.
 
 **Prize Pool**
 - **Base**: $250
@@ -61,7 +62,7 @@ If you have any questions about the ruleset or tournament, please reach out to m
 ### 📋 Format
 The bracket will be split into two phases:
 
-- **AM Division**: Waterfall (Top 2 advance to Pro Division)
+- **Gauntlet**: Waterfall (Top 2 advance to Pro Division)
 - **Pro Division**: Double Elimination (Top 12)
 
 Rounds may be adjusted during the tournament based on the number of registrants. Bracket difficulties are also subject to change and will be communicated to all players.
@@ -99,12 +100,12 @@ Photos are required with every score submission. Rules for photo submissions:
 
 **Failure to submit qualifiers by the deadline could result in disqualification from the tournament.**
 
-### 🎓 AM Division
+### 🎓 Gauntlet
 
 #### Details
 - **Date**: November 11th, 2023
-- **Format**: Waterfall (Pools of 4 Players / BO3)
-  - **Last Pool**: Round Robin (Pool of 4 / Round Robin)
+- **Format**: Waterfall (Pools of 4 Players)
+  - **Grand Finals**: Round Robin (Pool of 4 / Round Robin)
 - **Player Count**: Max 22
 - **Difficulty Range**
   - **General**: S13 - S21
@@ -131,7 +132,7 @@ All other players advance onto Round 2.
 All other players are eliminated.
 
 ##### Grand Finals
-Last Pool is a round robin with the top 4 players in the AM Division. 4 songs will be played by all players.
+Last Pool is a round robin with the top 4 players in the Gauntlet. 4 songs will be played by all players.
 
 Players will be awarded points based on their score on each song in comparison to the other players in the round. The two players with the highest point totals will quality for Pro Division and the bottom two players are eliminated. In the event of a tie affecting more than one player, a randomly drawn tiebreaker chart will be played between the affected players.
 
@@ -159,7 +160,7 @@ Point allocation may be adjusted depending on the number of tournament entrants.
 - **Format**: Double Elimination
   - **General**: BO3
   - **Losers/Winners/Grand Finals**: BO5
-- **Player Count**: 12 (10 Qualified, 2 from AM Division)
+- **Player Count**: 12 (10 Qualified, 2 from the Gauntlet)
 - **Difficulty Range**
   - **Winner's R1**: S21 - D23 
   - **Winner's Quarters**: S22 - D24 
