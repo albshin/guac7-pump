@@ -7,7 +7,6 @@ import {
   Heading,
   Image,
   Link,
-  Progress,
   SimpleGrid,
   Stack,
   Table,
@@ -18,6 +17,7 @@ import {
   Th,
   Thead,
   Tr,
+  keyframes,
 } from '@chakra-ui/react';
 import hero from './assets/guHero.png';
 import guLogo from './assets/gulogo.png';
@@ -26,6 +26,7 @@ import graeme from './assets/graeme.png';
 import skeptic from './assets/skeptic.png';
 import aSiteDeLaRue from './assets/asitedelarue.png';
 import sarabande from './assets/sarabande.png';
+import PrizePool from '../components/PrizePool';
 import {
   InfoIcon,
   AtSignIcon,
@@ -33,12 +34,66 @@ import {
   ViewIcon,
 } from '@chakra-ui/icons';
 import { Link as RemixLink } from '@remix-run/react';
+import { motion } from 'framer-motion';
+
+const pictureFadeIn = keyframes({
+  '0%': {
+    opacity: 0,
+    transform: 'translate(20px, 0px)',
+  },
+  '100%': {
+    opacity: 1,
+  },
+});
+
+const fadeIn = keyframes({
+  '0%': {
+    opacity: 0,
+    transform: 'translate(0px, 20px)',
+  },
+  '100%': {
+    opacity: 1,
+  },
+});
+
+const playerAnimation = {
+  initial: {
+    opacity: 0,
+  },
+  animate: (index: number) => ({
+    opacity: 1,
+    transition: {
+      delay: 0.15 * index,
+      duration: 0.65,
+    },
+  }),
+};
+
+const qualifierAnimation = {
+  initial: {
+    opacity: 0,
+    y: 20,
+  },
+  animate: (index: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: {
+      delay: 0.2 + 0.15 * index,
+      duration: 0.65,
+    },
+  }),
+};
 
 const Index = () => {
   return (
     <>
       <Box bgColor={'green.600'} p={6} h="350px">
-        <Flex alignItems="center" justifyContent="center" h="100%">
+        <Flex
+          alignItems="center"
+          justifyContent="center"
+          h="100%"
+          animation={`${fadeIn} 1.2s ease-in-out`}
+        >
           <Image src={guLogo} h="240px" marginTop="40px" mr="3" />
           <Box>
             <Heading as="h1" size="4xl" color="white" mb="2">
@@ -82,6 +137,8 @@ const Index = () => {
           direction={['column', 'column', 'row']}
           mb={[8, 8, 2]}
           justify="center"
+          color="white"
+          columnGap="80px"
         >
           <Stack flex="1" gap={4} py={8}>
             <Box>
@@ -90,8 +147,8 @@ const Index = () => {
                 <Text fontWeight="bold">Regional Competition</Text>
               </Flex>
               <Text>
-                Featuring players from Oregon, Texas, Pennsylvania, New York,
-                and Vancouver
+                Featuring the best players from New England, Oregon, Texas,
+                Pennsylvania, New York, and Vancouver, BC
               </Text>
             </Box>
             <Box>
@@ -127,39 +184,27 @@ const Index = () => {
             objectFit="cover"
             borderRadius="md"
             bgColor="whiteAlpha.100"
+            animation={`${pictureFadeIn} 1s ease-in-out`}
             src={hero}
           />
         </Stack>
-        <Box>
-          <Heading as="h2" mb="3">
-            Prize Pool
-          </Heading>
-          <Text fontWeight="semibold" mb={6}>
-            The prize pool will increase at 25 entrants and once more at 32
-            entrants!
-          </Text>
-          <Flex justifyContent="space-between" mb={2} fontWeight="bold">
-            <Text>$250</Text>
-            <Text>$325</Text>
-            <Text>$400</Text>
-          </Flex>
-          <Progress
-            value={8}
-            colorScheme="whiteAlpha"
-            borderRadius="md"
-            h="20px"
-          />
-        </Box>
+        <PrizePool />
       </Container>
       <Box bg="green.600">
         <Container py="12" maxW="container.lg">
           <Flex flexDirection="column" alignItems="center" mb="6">
             <Heading as="h2" color="white" mb="3">
-              Featured Players
+              Featuring
             </Heading>
           </Flex>
           <SimpleGrid columns={[2, 2, 3, 4]} gap={4}>
             {[
+              {
+                name: 'Jaekim',
+                location: 'Boston, MA',
+                subtitle: ['🥈 GUAC 6', 'BITE 6 Commentary'],
+                picture: jaekim,
+              },
               { name: 'Another86', location: 'NYC', subtitle: ['🥈 BITE 6'] },
               {
                 name: '4199',
@@ -168,37 +213,42 @@ const Index = () => {
                 picture: graeme,
               },
               {
-                name: 'sel',
+                name: 'Sel',
                 location: 'Oregon',
                 subtitle: ['Expert 3', 'First East Coast Apperance'],
               },
               {
-                name: 'Jaekim',
-                location: 'Boston, MA',
-                subtitle: ['BITE 6 Commentary'],
-                picture: jaekim,
-              },
-              {
                 name: 'TUSA',
                 location: 'Dallas, TX',
-                subtitle: ['BITE 6 Commentary'],
+                subtitle: ['🥉 GUAC 6', 'BITE 6 Commentary'],
               },
-            ].map((player) => (
-              <Flex flexDir="column" alignItems="center" key={player.name}>
-                <Avatar
-                  name={player.name}
-                  size="xl"
-                  mb={4}
-                  src={player.picture ?? undefined}
-                />
-                <Text fontWeight="bold" textAlign="center">
-                  {player.name}
-                </Text>
-                <Text fontWeight="semibold">{player.location}</Text>
-                {player.subtitle.map((item) => (
-                  <Text>{item}</Text>
-                ))}
-              </Flex>
+            ].map((player, i) => (
+              <motion.div
+                key={player.name}
+                variants={playerAnimation}
+                initial="initial"
+                whileInView="animate"
+                viewport={{
+                  once: true,
+                }}
+                custom={i}
+              >
+                <Flex flexDir="column" alignItems="center">
+                  <Avatar
+                    name={player.name}
+                    size="xl"
+                    mb={4}
+                    src={player.picture ?? undefined}
+                  />
+                  <Text fontWeight="bold" textAlign="center">
+                    {player.name}
+                  </Text>
+                  <Text fontWeight="semibold">{player.location}</Text>
+                  {player.subtitle.map((item) => (
+                    <Text>{item}</Text>
+                  ))}
+                </Flex>
+              </motion.div>
             ))}
           </SimpleGrid>
         </Container>
@@ -239,8 +289,17 @@ const Index = () => {
               { name: 'Sarabande', difficulty: 'S20', image: sarabande },
               { name: 'Skeptic', difficulty: 'S22', image: skeptic },
               { difficulty: 'D24', border: 'green.400' },
-            ].map((song) => (
-              <Box key={song.difficulty}>
+            ].map((song, i) => (
+              <motion.div
+                key={song.difficulty}
+                variants={qualifierAnimation}
+                initial="initial"
+                whileInView="animate"
+                viewport={{
+                  once: true,
+                }}
+                custom={i}
+              >
                 <Box
                   border="3px red solid"
                   borderRadius="md"
@@ -256,7 +315,7 @@ const Index = () => {
                 <Text fontWeight="bold" textAlign="center">
                   {song.name} {song.difficulty}
                 </Text>
-              </Box>
+              </motion.div>
             ))}
           </SimpleGrid>
         </Container>

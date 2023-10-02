@@ -1,9 +1,19 @@
-import { Container, Flex, Heading, Text, Link } from '@chakra-ui/react';
+import {
+  Container,
+  Flex,
+  Heading,
+  Text,
+  Link,
+  keyframes,
+  Box,
+} from '@chakra-ui/react';
 import { Link as RemixLink } from '@remix-run/react';
 import Markdown from 'react-markdown';
 import ChakraUIRenderer from '~/chakraMarkdown';
 import gfm from 'remark-gfm';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import { motion, useScroll } from 'framer-motion';
+import styled from '@emotion/styled';
 
 const markdown = `
 ### ℹ️ General Information
@@ -35,7 +45,20 @@ If you have any questions about the ruleset or tournament, please reach out to m
 - **4th Place**: 10%
 - **5th Place**: 5%
 
-### 📖 Format
+### 📖 General Rules
+- Both brackets will be played in Normal judgment (no HJ).
+- All speed mods, noteskins, and mods from the display category are allowed.
+- Mods from the PATH and JUDGE categories may not be used.
+- Down scroll path mod (DR) will be allowed however players who will use this mod will be required to notify the tournament organizer ahead of time in order to make special accommodations. If the tournament organizer is not notified ahead of time, the player will have to play with normal scroll.
+- BGA Dark will be on by default. Both players must consent to BGA On if it is wanted.
+- Any attempt to unfairly impact the game is grounds for disqualification at the tournament organizer's discretion.
+- In the case that any event unfairly impacts a player mid-song, the tournament organizer may allow both players to replay a song. Pad issue calls must be able to be immediately replicated.
+- Baby powder usage is allowed, however it must be applied off pads.
+- Once a song is completed, players must step off the pads and avoid hitting the center yellow panel. If by any chance a song score cannot be recorded and it is deemed to be the player's fault, the player will receive a score of 0.
+- Players are expected to be punctual to their matches within reason. Tournament organizers reserve the right to disqualify competitors due to tardiness at their own discretion.
+
+
+### 📋 Format
 The bracket will be split into two phases:
 
 - **AM Division**: Waterfall (Top 2 advance to Pro Division)
@@ -85,7 +108,7 @@ Photos are required with every score submission. Rules for photo submissions:
 - **Player Count**: Max 22
 - **Difficulty Range**
   - **General**: S13 - S21
-  - **Last Pool**: S20 - D21
+  - **Grand Finals**: S20 - D21
 
 #### Pools
 There are two rounds for each pool with 4 players each. Two songs will be played each round.
@@ -107,7 +130,7 @@ All other players advance onto Round 2.
 
 All other players are eliminated.
 
-##### Last Pool
+##### Grand Finals
 Last Pool is a round robin with the top 4 players in the AM Division. 4 songs will be played by all players.
 
 Players will be awarded points based on their score on each song in comparison to the other players in the round. The two players with the highest point totals will quality for Pro Division and the bottom two players are eliminated. In the event of a tie affecting more than one player, a randomly drawn tiebreaker chart will be played between the affected players.
@@ -149,10 +172,40 @@ Point allocation may be adjusted depending on the number of tournament entrants.
   - **Loser's Finals**: S25 - D26 
   - **Grand Finals**: S25/D25+ 
 `;
+const fadeInHero = keyframes({
+  '0%': {
+    opacity: 0,
+    transform: 'translate(0px, 10px)',
+  },
+  '100%': {
+    opacity: 1,
+  },
+});
+
+const fadeIn = keyframes({
+  '0%': {
+    opacity: 0,
+  },
+  '100%': {
+    opacity: 1,
+  },
+});
+
+const ScrollBar = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: var(--chakra-colors-purple-500);
+  transform-origin: 0%;
+`;
 
 const Rules = () => {
+  const { scrollYProgress } = useScroll();
   return (
     <>
+      <ScrollBar className="progress-bar" style={{ scaleX: scrollYProgress }} />
       <Flex
         bgColor={'green.600'}
         p={6}
@@ -160,20 +213,27 @@ const Rules = () => {
         justifyContent="center"
         alignItems="center"
       >
-        <Heading as="h1" textAlign="center" mb={4}>
+        <Heading
+          as="h1"
+          textAlign="center"
+          mb={4}
+          animation={`${fadeInHero} 1.2s linear`}
+        >
           Rules
         </Heading>
       </Flex>
       <Container py="12" maxW="container.lg">
         <Link as={RemixLink} to="/" color="green.200" textDecor="underline">
-          <Flex alignItems="center">
+          <Flex alignItems="center" mb={12}>
             <ArrowBackIcon mr={3} />
             <Text fontWeight="bold">Back to Home</Text>
           </Flex>
         </Link>
-        <Markdown remarkPlugins={[gfm]} components={ChakraUIRenderer()}>
-          {markdown}
-        </Markdown>
+        <Box animation={`${fadeIn} 1.2s linear`}>
+          <Markdown remarkPlugins={[gfm]} components={ChakraUIRenderer()}>
+            {markdown}
+          </Markdown>
+        </Box>
       </Container>
     </>
   );
