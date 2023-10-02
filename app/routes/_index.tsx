@@ -18,11 +18,14 @@ import {
   Th,
   Thead,
   Tr,
-  Wrap,
-  WrapItem,
 } from '@chakra-ui/react';
 import hero from './assets/guHero.png';
 import guLogo from './assets/gulogo.png';
+import jaekim from './assets/jaekim.png';
+import graeme from './assets/graeme.png';
+import skeptic from './assets/skeptic.png';
+import aSiteDeLaRue from './assets/asitedelarue.png';
+import sarabande from './assets/sarabande.png';
 import {
   InfoIcon,
   AtSignIcon,
@@ -48,7 +51,12 @@ const Index = () => {
         </Flex>
       </Box>
       <Container py="12" maxW="container.lg">
-        <Stack direction={['column', 'row']} mb={10} mx={16} spacing={4}>
+        <Stack
+          direction={['column', 'column', 'row']}
+          mb={10}
+          mx={16}
+          spacing={4}
+        >
           <Link
             href="https://www.start.gg/tournament/game-underground-arcade-championship-7/details"
             flex="1"
@@ -70,8 +78,12 @@ const Index = () => {
             </Button>
           </Link>
         </Stack>
-        <Stack direction={['column', 'row']}>
-          <Flex flex="1" justifyContent="space-between" flexDir="column" py={8}>
+        <Stack
+          direction={['column', 'column', 'row']}
+          mb={[8, 8, 2]}
+          justify="center"
+        >
+          <Stack flex="1" gap={4} py={8}>
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <AtSignIcon mr={3} color="green.500" />
@@ -109,7 +121,7 @@ const Index = () => {
                 fresh
               </Text>
             </Box>
-          </Flex>
+          </Stack>
           <Image
             boxSize="sm"
             objectFit="cover"
@@ -118,7 +130,7 @@ const Index = () => {
             src={hero}
           />
         </Stack>
-        <Box mt={4}>
+        <Box>
           <Heading as="h2" mb="3">
             Prize Pool
           </Heading>
@@ -126,10 +138,10 @@ const Index = () => {
             The prize pool will increase at 25 entrants and once more at 32
             entrants!
           </Text>
-          <Flex justifyContent="space-between" mb={2}>
-            <Text>$250 (Base)</Text>
-            <Text>$325 (25 entrants)</Text>
-            <Text>$400 (32 entrants)</Text>
+          <Flex justifyContent="space-between" mb={2} fontWeight="bold">
+            <Text>$250</Text>
+            <Text>$325</Text>
+            <Text>$400</Text>
           </Flex>
           <Progress
             value={8}
@@ -146,50 +158,49 @@ const Index = () => {
               Featured Players
             </Heading>
           </Flex>
-          <Wrap justify="center" alignItems="center" spacing="16">
-            <WrapItem flexDir="column" alignItems="center">
-              <Avatar name="Another48" size="xl" mb={4} />
-              <Text fontWeight="bold" textAlign="center">
-                Another48
-              </Text>
-              <Text fontWeight="semibold">NYC</Text>
-              <Text>🥈 BITE 6</Text>
-            </WrapItem>
-            <WrapItem flexDir="column" alignItems="center">
-              <Avatar name="4199" size="xl" mb={4} />
-              <Text fontWeight="bold" textAlign="center">
-                4199
-              </Text>
-              <Text fontWeight="semibold">Vancouver, BC</Text>
-              <Text>🥈 CHQ AC</Text>
-              <Text>🥈 Boston INNOVATED</Text>
-            </WrapItem>
-            <WrapItem flexDir="column" alignItems="center">
-              <Avatar name="sel" size="xl" mb={4} />
-              <Text fontWeight="bold" textAlign="center">
-                sel (jhlee0133)
-              </Text>
-              <Text fontWeight="semibold">Oregon</Text>
-              <Text>Expert 3</Text>
-              <Text>First East Coast Appearance</Text>
-            </WrapItem>
-            <WrapItem flexDir="column" alignItems="center">
-              <Avatar name="Jaekim" size="xl" mb={4} />
-              <Text fontWeight="bold" textAlign="center">
-                Jaekim
-              </Text>
-              <Text fontWeight="semibold">Boston, MA</Text>
-              <Text>BITE 6 Commentary</Text>
-            </WrapItem>
-            <WrapItem flexDir="column" alignItems="center">
-              <Avatar name="TUSA" size="xl" mb={4} />
-              <Text fontWeight="bold" textAlign="center">
-                TUSA
-              </Text>
-              <Text fontWeight="semibold">Dallas, TX</Text>
-              <Text>BITE 6 Commentary</Text>
-            </WrapItem>
-          </Wrap>
+          <SimpleGrid columns={[2, 2, 3, 4]} gap={4}>
+            {[
+              { name: 'Another86', location: 'NYC', subtitle: ['🥈 BITE 6'] },
+              {
+                name: '4199',
+                location: 'Vancouver, BC',
+                subtitle: ['🥈 CHQ AC', '🥈 Boston INNOVATED'],
+                picture: graeme,
+              },
+              {
+                name: 'sel',
+                location: 'Oregon',
+                subtitle: ['Expert 3', 'First East Coast Apperance'],
+              },
+              {
+                name: 'Jaekim',
+                location: 'Boston, MA',
+                subtitle: ['BITE 6 Commentary'],
+                picture: jaekim,
+              },
+              {
+                name: 'TUSA',
+                location: 'Dallas, TX',
+                subtitle: ['BITE 6 Commentary'],
+              },
+            ].map((player) => (
+              <Flex flexDir="column" alignItems="center" key={player.name}>
+                <Avatar
+                  name={player.name}
+                  size="xl"
+                  mb={4}
+                  src={player.picture ?? undefined}
+                />
+                <Text fontWeight="bold" textAlign="center">
+                  {player.name}
+                </Text>
+                <Text fontWeight="semibold">{player.location}</Text>
+                {player.subtitle.map((item) => (
+                  <Text>{item}</Text>
+                ))}
+              </Flex>
+            ))}
+          </SimpleGrid>
         </Container>
       </Box>
       <Container py="12" maxW="container.lg">
@@ -214,22 +225,39 @@ const Index = () => {
               Performing better on harder songs will net you a higher rating.
             </Text>
           </Flex>
-          <SimpleGrid columns={4} spacing={10}>
-            {['S10', 'S12', 'S14', 'S16', 'S18', 'S20', 'S22', 'D24'].map(
-              (song) => (
-                <Box key={song}>
-                  <Box
-                    borderRadius="md"
-                    bgColor="whiteAlpha.100"
-                    height="200px"
-                    mb={4}
-                  />
-                  <Text fontWeight="bold" textAlign="center">
-                    {song}
-                  </Text>
-                </Box>
-              )
-            )}
+          <SimpleGrid columns={[1, 2, 3, 4]} spacing={[4, 6, 6, 10]}>
+            {[
+              { difficulty: 'S10' },
+              { difficulty: 'S12' },
+              { difficulty: 'S14' },
+              {
+                name: 'A Site De La Rue',
+                difficulty: 'S16',
+                image: aSiteDeLaRue,
+              },
+              { difficulty: 'S18' },
+              { name: 'Sarabande', difficulty: 'S20', image: sarabande },
+              { name: 'Skeptic', difficulty: 'S22', image: skeptic },
+              { difficulty: 'D24', border: 'green.400' },
+            ].map((song) => (
+              <Box key={song.difficulty}>
+                <Box
+                  border="3px red solid"
+                  borderRadius="md"
+                  borderColor={song.border ?? 'red'}
+                  bgColor="whiteAlpha.100"
+                  bgImage={song.image}
+                  bgRepeat="no-repeat"
+                  bgPos="center"
+                  bgSize="cover"
+                  height="200px"
+                  mb={4}
+                />
+                <Text fontWeight="bold" textAlign="center">
+                  {song.name} {song.difficulty}
+                </Text>
+              </Box>
+            ))}
           </SimpleGrid>
         </Container>
       </Box>
@@ -239,8 +267,7 @@ const Index = () => {
             Leaderboard
           </Heading>
           <Text color="white" fontWeight="semibold">
-            The top 10 players are placed in the Pro Division. The top 2 players
-            from the AM bracket will move onto the Pro Division.
+            The top 10 players are placed in the Pro Division.
           </Text>
         </Flex>
         <TableContainer borderRadius="md" bg="whiteAlpha.100">

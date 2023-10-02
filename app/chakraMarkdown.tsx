@@ -97,7 +97,7 @@ export const defaults: any = {
     return (
       <Element
         spacing={2}
-        my={4}
+        my={3}
         as={ordered ? 'ol' : 'ul'}
         styleType={styleType}
         pl={4}
@@ -125,7 +125,7 @@ export const defaults: any = {
     return (
       <Element
         spacing={2}
-        my={4}
+        my={3}
         as={ordered ? 'ol' : 'ul'}
         styleType={styleType}
         pl={4}
