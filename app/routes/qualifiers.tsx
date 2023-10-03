@@ -100,6 +100,11 @@ const SongQualifier = ({
       <Box
         w="100%"
         height="200px"
+        border="3px red solid"
+        borderColor={
+          qualifierSongs.find((qualifer) => qualifer.name === songName)
+            ?.border ?? 'red'
+        }
         bgColor="whiteAlpha.100"
         bgImage={
           qualifierSongs.find((qualifer) => qualifer.name === songName)?.image

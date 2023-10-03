@@ -76,14 +76,14 @@ Players will be allowed to submit scores from either an XX cab or a Phoenix cab.
 
 #### Qualification Chart Pool
 
-- **S10**: 
-- **S12**: 
-- **S14**: 
+- **S10**: District 1
+- **S12**: Black Swan
+- **S14**: Heart Rabbit Coaster
 - **S16**: A Site De La Rue
-- **S18**: 
+- **S18**: Nihilism -Another Ver.-
 - **S20**: Sarabande 
 - **S22**: Skeptic
-- **D24**: 
+- **D24**: Achluoias
 
 #### Qualifier Scoring
 
