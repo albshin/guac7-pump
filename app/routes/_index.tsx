@@ -139,7 +139,7 @@ const Index = () => {
           color="white"
           columnGap="80px"
         >
-          <Stack flex="1" gap={4} py={8}>
+          <Stack flex="1" gap={6} py={8}>
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <AtSignIcon mr={3} color="green.500" />
@@ -244,7 +244,7 @@ const Index = () => {
                   </Text>
                   <Text fontWeight="semibold">{player.location}</Text>
                   {player.subtitle.map((item) => (
-                    <Text>{item}</Text>
+                    <Text key={item}>{item}</Text>
                   ))}
                 </Flex>
               </motion.div>
