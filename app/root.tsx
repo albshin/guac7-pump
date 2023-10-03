@@ -47,6 +47,18 @@ interface DocumentProps {
 }
 
 const theme = extendTheme({
+  components: {
+    FormLabel: {
+      baseStyle: {
+        fontSize: 'sm',
+      },
+    },
+    FormErrorMessage: {
+      baseStyle: {
+        fontSize: 'sm',
+      },
+    },
+  },
   config: {
     initialColorMode: 'dark',
     useSystemColorMode: false,

@@ -24,6 +24,10 @@ import {
   useLoaderData,
   useOutletContext,
 } from '@remix-run/react';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as yup from 'yup';
+import { useCallback, useState } from 'react';
+import { useDropzone } from 'react-dropzone';
 import {
   FieldErrors,
   SubmitHandler,
@@ -51,6 +55,8 @@ interface SongQualiferProps {
   watch: any;
   errors: FieldErrors<any>;
   isSubmitting: boolean;
+  picture?: File;
+  setPicture: (file: File) => void;
 }
 
 const SongQualifier = ({
@@ -59,18 +65,37 @@ const SongQualifier = ({
   watch,
   isSubmitting,
   index,
+  picture,
+  setPicture,
 }: SongQualiferProps) => {
   const versionId = `song_${index}_version`;
   const songId = `song_${index}_name`;
+  const scoreId = `song_${index}_score`;
   const version = watch(versionId);
-  const songName = watch(songId);
+  const songName = watch(songId, 'District 1');
+
+  const onDrop = useCallback((acceptedFiles: File[]) => {
+    console.log(acceptedFiles[0]);
+    setPicture(acceptedFiles[0]);
+  }, []);
+  const { getRootProps, getInputProps, isDragActive } = useDropzone({
+    onDrop,
+    maxFiles: 1,
+    maxSize: 5242880,
+    multiple: false,
+    accept: {
+      'image/png': ['.png'],
+      'image/jpeg': ['.jpg'],
+    },
+  });
 
   return (
     <Stack flex="1" alignSelf="flex-start">
-      <FormControl mb={3}>
+      <FormControl>
         <FormLabel>Version</FormLabel>
         <Select
           key={versionId}
+          size="sm"
           {...register(versionId, {
             required: true,
           })}
@@ -82,7 +107,8 @@ const SongQualifier = ({
       <FormControl>
         <FormLabel>Song</FormLabel>
         <Select
-          mb={5}
+          size="sm"
+          mb={3}
           {...register(songId, {
             required: true,
           })}
@@ -115,8 +141,36 @@ const SongQualifier = ({
         borderRadius="md"
         mb={5}
       />
+      <Box
+        {...getRootProps()}
+        border="2px solid"
+        borderColor="whiteAlpha.400"
+        borderRadius="md"
+        px={3}
+        py={2}
+        mb={3}
+      >
+        <input name={`song_${index}_picture`} {...getInputProps()} />
+        <Text fontSize="sm" textAlign="center">
+          {isDragActive ? (
+            'Drop Here'
+          ) : (
+            <>
+              {picture ? 'Uploaded! ' : 'Drag or '}
+              <Text
+                as="u"
+                textDecor="underline"
+                display="inline"
+                cursor="pointer"
+              >
+                {picture ? 'Change Picture' : 'Upload Score Picture'}
+              </Text>
+            </>
+          )}
+        </Text>
+      </Box>
       {version === 'XX' ? (
-        <SimpleGrid columns={[1, 1, 2]} gap={3}>
+        <Stack>
           {[
             {
               field: 'perfect',
@@ -137,6 +191,7 @@ const SongQualifier = ({
               <FormControl isInvalid={!!errors[id]} key={judge.field}>
                 <FormLabel>{judge.label}</FormLabel>
                 <Input
+                  size="sm"
                   id={id}
                   type="number"
                   placeholder="0"
@@ -148,26 +203,25 @@ const SongQualifier = ({
               </FormControl>
             );
           })}
-        </SimpleGrid>
+        </Stack>
       ) : (
-        <FormControl isInvalid={!!errors.score}>
+        <FormControl isInvalid={!!errors[scoreId]}>
           <FormLabel>Score</FormLabel>
           <Input
-            id={`song_${index}_score`}
+            size="sm"
+            id={scoreId}
             type="number"
             disabled={isSubmitting}
             placeholder="0"
-            {...register(`song_${index}_score`, {
+            {...register(scoreId, {
               required: 'Required',
             })}
           />
           <FormErrorMessage>
-            {errors?.score?.message?.toString()}
+            {errors[scoreId]?.message?.toString()}
           </FormErrorMessage>
         </FormControl>
       )}
-
-      <Button mt={5}>Upload Picture</Button>
     </Stack>
   );
 };
@@ -194,12 +248,14 @@ export const loader: LoaderFunction = async ({ request }) => {
 const Qualifiers = () => {
   const { supabase, session } = useOutletContext<OutletContext>();
   const { data } = useLoaderData<typeof loader>();
+  const [pictureOne, setPictureOne] = useState<File>();
+  const [pictureTwo, setPictureTwo] = useState<File>();
 
   const {
     handleSubmit,
     register,
     watch,
-    formState: { errors, isSubmitting },
+    formState: { errors, isSubmitting, isValid },
   } = useForm({
     defaultValues: {
       username: data.username,
@@ -228,6 +284,7 @@ const Qualifiers = () => {
       song_two_maxCombo: data?.song_two?.maxCombo,
       song_two_score: data?.song_two?.score,
     },
+    mode: 'onBlur',
   });
 
   const selectedStrongestSkill = watch<any>('strongest_skill', 'Run');
@@ -242,7 +299,54 @@ const Qualifiers = () => {
     });
   };
 
-  const onSubmit: SubmitHandler<any> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<any> = async (data) => {
+    if (pictureOne === undefined || pictureTwo === undefined) {
+      return;
+    }
+
+    const { error: uploadErrorOne } = await supabase.storage
+      .from('qualifier_pictures')
+      .upload(`${session.user.id}/song_one.jpg`, pictureOne, { upsert: true });
+
+    const { error: uploadErrorTwo } = await supabase.storage
+      .from('qualifier_pictures')
+      .upload(`${session.user.id}/song_two.jpg`, pictureTwo, { upsert: true });
+
+    const { error } = await supabase.from('qualifiers').upsert({
+      id: session.user.id,
+      username: data.username,
+      email: session.user.email,
+      questions: {
+        location: data.location,
+        title: data.title,
+        strongest_skill: data.strongest_skill,
+        weakest_skill: data.weakest_skill,
+      },
+      song_one: {
+        version: data.song_one_version,
+        perfect: data.song_one_perfect,
+        great: data.song_one_great,
+        good: data.song_one_good,
+        bad: data.song_one_bad,
+        miss: data.song_one_miss,
+        maxCombo: data.song_one_maxCombo,
+        score: data.song_one_score,
+      },
+      song_two: {
+        version: data.song_two_version,
+        perfect: data.song_two_perfect,
+        great: data.song_two_great,
+        good: data.song_two_good,
+        bad: data.song_two_bad,
+        miss: data.song_two_miss,
+        maxCombo: data.song_two_maxCombo,
+        score: data.song_two_score,
+      },
+      updated_at: new Date(Date.now()).toISOString(),
+    });
+
+    console.error(error);
+  };
 
   return (
     <>
@@ -298,13 +402,14 @@ const Qualifiers = () => {
             ) : (
               <Stack>
                 <Heading size="md">Information</Heading>
-                <Text>
+                <Text fontSize="md">
                   Questions will be used by the stream production team to
                   deliver a high quality broadcast!
                 </Text>
                 <FormControl isInvalid={!!errors.username}>
                   <FormLabel>start.gg Username</FormLabel>
                   <Input
+                    size="sm"
                     type="text"
                     {...register('username', {
                       required: 'Username is required',
@@ -318,6 +423,7 @@ const Qualifiers = () => {
                   <FormLabel>What state/province are you from?</FormLabel>
                   <Input
                     type="text"
+                    size="sm"
                     {...register('location', {
                       required: 'Location is required',
                     })}
@@ -333,6 +439,7 @@ const Qualifiers = () => {
                   </FormLabel>
                   <Input
                     type="text"
+                    size="sm"
                     {...register('title', {
                       required: 'Title is required',
                     })}
@@ -346,6 +453,7 @@ const Qualifiers = () => {
                     <FormLabel>What is your strongest skill?</FormLabel>
 
                     <Select
+                      size="sm"
                       {...register('strongest_skill', {
                         required: 'Required',
                       })}
@@ -367,6 +475,7 @@ const Qualifiers = () => {
                       {...register('weakest_skill', {
                         required: 'Required',
                       })}
+                      size="sm"
                     >
                       {['Run', 'Drill', 'Gimmick', 'Twist', 'Bracket', 'Half']
                         .filter((skill) => skill !== selectedStrongestSkill)
@@ -379,15 +488,17 @@ const Qualifiers = () => {
                     </FormErrorMessage>
                   </FormControl>
                 </HStack>
-                <Divider my={8} />
+                <Divider my={5} />
                 <Heading size="md">Qualifiers</Heading>
-                <HStack spacing="8" mb={8}>
+                <HStack spacing="8" mb={5}>
                   <SongQualifier
                     watch={watch}
                     register={register}
                     isSubmitting={isSubmitting}
                     errors={errors}
                     index="one"
+                    picture={pictureOne}
+                    setPicture={setPictureOne}
                   />
                   <SongQualifier
                     watch={watch}
@@ -395,9 +506,16 @@ const Qualifiers = () => {
                     isSubmitting={isSubmitting}
                     errors={errors}
                     index="two"
+                    picture={pictureTwo}
+                    setPicture={setPictureTwo}
                   />
                 </HStack>
-                <Button colorScheme="green" type="submit">
+                <Divider mb={5} />
+                <Button
+                  type="submit"
+                  colorScheme="green"
+                  isDisabled={isSubmitting || !isValid}
+                >
                   Submit
                 </Button>
               </Stack>

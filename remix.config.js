@@ -8,4 +8,8 @@ module.exports = {
   // assetsBuildDirectory: "public/build",
   // publicPath: "/build/",
   // serverBuildPath: "build/index.js",
+  serverDependenciesToBundle: [
+    '@uppy/core',
+    '@uppy/react'
+  ]
 };
