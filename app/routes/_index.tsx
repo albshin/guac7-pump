@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Flex,
+  HStack,
   Heading,
   Image,
   Link,
@@ -23,9 +24,8 @@ import hero from './assets/guHero.png';
 import guLogo from './assets/gulogo.png';
 import jaekim from './assets/jaekim.png';
 import graeme from './assets/graeme.png';
-import skeptic from './assets/skeptic.png';
-import aSiteDeLaRue from './assets/asitedelarue.png';
-import sarabande from './assets/sarabande.png';
+import guac7GauntletSchedule from './assets/guac7GauntletSchedule.png';
+import guac7ProSchedule from './assets/guac7ProSchedule.png';
 import PrizePool from '../components/PrizePool';
 import {
   InfoIcon,
@@ -35,6 +35,7 @@ import {
 } from '@chakra-ui/icons';
 import { Link as RemixLink } from '@remix-run/react';
 import { motion } from 'framer-motion';
+import { qualifierSongs } from '~/utils/qualifierSongs';
 
 const pictureFadeIn = keyframes({
   '0%': {
@@ -78,7 +79,7 @@ const qualifierAnimation = {
     opacity: 1,
     y: 0,
     transition: {
-      delay: 0.2 + 0.15 * index,
+      delay: 0.1 + 0.15 * index,
       duration: 0.65,
     },
   }),
@@ -94,7 +95,7 @@ const Index = () => {
           h="100%"
           animation={`${fadeIn} 1.2s ease-in-out`}
         >
-          <Image src={guLogo} h="240px" marginTop="40px" mr="3" />
+          <Image src={guLogo} h="150px" mr={8} />
           <Box>
             <Heading as="h1" size="4xl" color="white" mb="2">
               GUAC 7 Pump
@@ -120,14 +121,12 @@ const Index = () => {
               Register
             </Button>
           </Link>
-          <Box flex="1">
-            <RemixLink to="/rules">
-              <Button size="lg" w="100%" colorScheme="gray">
-                Rules
-              </Button>
-            </RemixLink>
-          </Box>
-          <Link flex="1">
+          <Link as={RemixLink} to="/rules" flex="1">
+            <Button size="lg" w="100%" colorScheme="gray">
+              Rules
+            </Button>
+          </Link>
+          <Link as={RemixLink} to="/qualifiers" flex="1">
             <Button size="lg" variant="outline" w="100%">
               Submit Qualifiers
             </Button>
@@ -140,7 +139,7 @@ const Index = () => {
           color="white"
           columnGap="80px"
         >
-          <Stack flex="1" gap={4} py={8}>
+          <Stack flex="1" gap={6} py={8}>
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <AtSignIcon mr={3} color="green.500" />
@@ -245,7 +244,7 @@ const Index = () => {
                   </Text>
                   <Text fontWeight="semibold">{player.location}</Text>
                   {player.subtitle.map((item) => (
-                    <Text>{item}</Text>
+                    <Text key={item}>{item}</Text>
                   ))}
                 </Flex>
               </motion.div>
@@ -256,12 +255,29 @@ const Index = () => {
       <Container py="12" maxW="container.lg">
         <Flex flexDirection="column" alignItems="center" mb="6">
           <Heading as="h2" color="white" mb="3">
-            Schedule
+            Leaderboard
           </Heading>
           <Text color="white" fontWeight="semibold">
-            TBD!
+            The top 10 players are placed in the Pro Division.
           </Text>
         </Flex>
+        <TableContainer borderRadius="md" bg="whiteAlpha.100">
+          <Table variant="striped" colorScheme="whiteAlpha">
+            <Thead>
+              <Tr>
+                <Th>Seed</Th>
+                <Th>Player</Th>
+                <Th>Rating</Th>
+                <Th>Song 1</Th>
+                <Th>Song 2</Th>
+              </Tr>
+            </Thead>
+            <Tbody></Tbody>
+            <TableCaption fontWeight="bold" p="6">
+              No submissions yet!
+            </TableCaption>
+          </Table>
+        </TableContainer>
       </Container>
       <Box bgColor="green.600">
         <Container py="12" maxW="container.lg">
@@ -276,20 +292,7 @@ const Index = () => {
             </Text>
           </Flex>
           <SimpleGrid columns={[1, 2, 3, 4]} spacing={[4, 6, 6, 10]}>
-            {[
-              { difficulty: 'S10' },
-              { difficulty: 'S12' },
-              { difficulty: 'S14' },
-              {
-                name: 'A Site De La Rue',
-                difficulty: 'S16',
-                image: aSiteDeLaRue,
-              },
-              { difficulty: 'S18' },
-              { name: 'Sarabande', difficulty: 'S20', image: sarabande },
-              { name: 'Skeptic', difficulty: 'S22', image: skeptic },
-              { difficulty: 'D24', border: 'green.400' },
-            ].map((song, i) => (
+            {qualifierSongs.map((song, i) => (
               <motion.div
                 key={song.difficulty}
                 variants={qualifierAnimation}
@@ -323,29 +326,21 @@ const Index = () => {
       <Container py="12" maxW="container.lg">
         <Flex flexDirection="column" alignItems="center" mb="6">
           <Heading as="h2" color="white" mb="3">
-            Leaderboard
+            Schedule
           </Heading>
           <Text color="white" fontWeight="semibold">
-            The top 10 players are placed in the Pro Division.
+            Schedule is subject to change. A finalized schedule will be released
+            closer to the event.
           </Text>
+          <Flex
+            justify="center"
+            align="center"
+            flexDir={['column', 'column', 'row']}
+          >
+            <Image maxW={['100%', '100%', '50%']} src={guac7GauntletSchedule} />
+            <Image maxW={['100%', '100%', '50%']} src={guac7ProSchedule} />
+          </Flex>
         </Flex>
-        <TableContainer borderRadius="md" bg="whiteAlpha.100">
-          <Table variant="striped" colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th>Seed</Th>
-                <Th>Player</Th>
-                <Th>Rating</Th>
-                <Th>Song 1</Th>
-                <Th>Song 2</Th>
-              </Tr>
-            </Thead>
-            <Tbody></Tbody>
-            <TableCaption fontWeight="bold" p="6">
-              No submissions yet!
-            </TableCaption>
-          </Table>
-        </TableContainer>
       </Container>
     </>
   );

@@ -1,5 +1,5 @@
 // root.tsx
-import React, { useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect, useMemo, useState } from 'react';
 import { withEmotionCache } from '@emotion/react';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import {
@@ -9,10 +9,21 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
+  useLoaderData,
 } from '@remix-run/react';
-import { MetaFunction, LinksFunction, LoaderFunction } from '@remix-run/node'; // Depends on the runtime you choose
+import {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunction,
+  json,
+} from '@remix-run/node'; // Depends on the runtime you choose
 
 import { ServerStyleContext, ClientStyleContext } from './context';
+import {
+  createBrowserClient,
+  createServerClient,
+} from '@supabase/auth-helpers-remix';
+import { createSupabaseServerClient } from './utils/supabase.server';
 
 export const meta: MetaFunction = () => ({
   charset: 'utf-8',
@@ -36,6 +47,18 @@ interface DocumentProps {
 }
 
 const theme = extendTheme({
+  components: {
+    FormLabel: {
+      baseStyle: {
+        fontSize: 'sm',
+      },
+    },
+    FormErrorMessage: {
+      baseStyle: {
+        fontSize: 'sm',
+      },
+    },
+  },
   config: {
     initialColorMode: 'dark',
     useSystemColorMode: false,
@@ -54,7 +77,23 @@ const theme = extendTheme({
 export const loader: LoaderFunction = async ({ request }) => {
   // first time users will not have any cookies and you may not return
   // undefined here, hence ?? is necessary
-  return request.headers.get('cookie') ?? '';
+  // request.headers.get('cookie') ?? '';
+  const env = {
+    SUPABASE_URL: process.env.SUPABASE_URL!,
+    SUPABASE_ANON_KEY: process.env.SUPABASE_ANON_KEY!,
+  };
+
+  const response = new Response();
+  const supabase = createSupabaseServerClient({
+    request,
+    response,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  return json({ env, session }, { headers: response.headers });
 };
 
 const Document = withEmotionCache(
@@ -99,11 +138,17 @@ const Document = withEmotionCache(
     );
   }
 );
+
 export default function App() {
+  const { env, session } = useLoaderData();
+
+  const [supabase] = useState(() =>
+    createBrowserClient(env.SUPABASE_URL!, env.SUPABASE_ANON_KEY!)
+  );
   return (
     <Document>
       <ChakraProvider theme={theme}>
-        <Outlet />
+        <Outlet context={{ supabase, session }} />
       </ChakraProvider>
     </Document>
   );
