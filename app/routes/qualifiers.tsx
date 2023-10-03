@@ -63,9 +63,9 @@ const validateFile = (value: FileList) => {
   }
   for (const file of Array.from(value)) {
     const fsMb = file.size / (1024 * 1024);
-    const MAX_FILE_SIZE = 5;
+    const MAX_FILE_SIZE = 8;
     if (fsMb > MAX_FILE_SIZE) {
-      return 'Cannot be greater than 5MB';
+      return 'Cannot be greater than 8MB';
     }
   }
   return true;
@@ -273,7 +273,6 @@ const Qualifiers = () => {
     handleSubmit,
     register,
     watch,
-    control,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     defaultValues: {
@@ -303,7 +302,7 @@ const Qualifiers = () => {
       song_two_maxCombo: data?.song_two?.maxCombo,
       song_two_score: data?.song_two?.score,
     },
-    mode: 'onBlur',
+    mode: 'onChange',
   });
 
   const selectedStrongestSkill = watch<any>('strongest_skill', 'Run');
