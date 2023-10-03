@@ -16,7 +16,6 @@ import {
   Box,
   Divider,
   FormErrorMessage,
-  SimpleGrid,
 } from '@chakra-ui/react';
 import { LoaderFunction, json } from '@remix-run/node';
 import {
@@ -24,10 +23,6 @@ import {
   useLoaderData,
   useOutletContext,
 } from '@remix-run/react';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { useCallback, useState } from 'react';
-import { useDropzone } from 'react-dropzone';
 import {
   FieldErrors,
   SubmitHandler,
@@ -38,6 +33,8 @@ import { OutletContext } from '~/types/types';
 import { qualifierSongs } from '~/utils/qualifierSongs';
 import { createSupabaseServerClient } from '~/utils/supabase.server';
 import { getRedirectURL } from '~/utils/url';
+import './assets/qualifiers.css';
+import FileUpload from '~/components/FileUpload';
 
 const fadeInHero = keyframes({
   '0%': {
@@ -55,9 +52,24 @@ interface SongQualiferProps {
   watch: any;
   errors: FieldErrors<any>;
   isSubmitting: boolean;
-  picture?: File;
-  setPicture: (file: File) => void;
 }
+
+const validateFile = (value: FileList) => {
+  if (value.length < 1) {
+    return 'Picture is required';
+  }
+  if (value.length > 1) {
+    return 'Cannot use multiple files';
+  }
+  for (const file of Array.from(value)) {
+    const fsMb = file.size / (1024 * 1024);
+    const MAX_FILE_SIZE = 5;
+    if (fsMb > MAX_FILE_SIZE) {
+      return 'Cannot be greater than 5MB';
+    }
+  }
+  return true;
+};
 
 const SongQualifier = ({
   register,
@@ -65,29 +77,14 @@ const SongQualifier = ({
   watch,
   isSubmitting,
   index,
-  picture,
-  setPicture,
 }: SongQualiferProps) => {
   const versionId = `song_${index}_version`;
   const songId = `song_${index}_name`;
   const scoreId = `song_${index}_score`;
+  const pictureId = `song_${index}_picture`;
   const version = watch(versionId);
   const songName = watch(songId, 'District 1');
-
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    console.log(acceptedFiles[0]);
-    setPicture(acceptedFiles[0]);
-  }, []);
-  const { getRootProps, getInputProps, isDragActive } = useDropzone({
-    onDrop,
-    maxFiles: 1,
-    maxSize: 5242880,
-    multiple: false,
-    accept: {
-      'image/png': ['.png'],
-      'image/jpeg': ['.jpg'],
-    },
-  });
+  const picture = watch(pictureId);
 
   return (
     <Stack flex="1" alignSelf="flex-start">
@@ -141,34 +138,49 @@ const SongQualifier = ({
         borderRadius="md"
         mb={5}
       />
-      <Box
-        {...getRootProps()}
-        border="2px solid"
-        borderColor="whiteAlpha.400"
-        borderRadius="md"
-        px={3}
-        py={2}
-        mb={3}
-      >
-        <input name={`song_${index}_picture`} {...getInputProps()} />
-        <Text fontSize="sm" textAlign="center">
-          {isDragActive ? (
-            'Drop Here'
-          ) : (
-            <>
-              {picture ? 'Uploaded! ' : 'Drag or '}
-              <Text
-                as="u"
-                textDecor="underline"
-                display="inline"
-                cursor="pointer"
-              >
-                {picture ? 'Change Picture' : 'Upload Score Picture'}
-              </Text>
-            </>
-          )}
-        </Text>
-      </Box>
+      <FormControl isInvalid={!errors.pictureId} isRequired>
+        <FileUpload
+          name={pictureId}
+          accept={'image/jpeg, image/png'}
+          multiple={false}
+          register={register(pictureId, { validate: validateFile })}
+        >
+          <Box
+            border="2px solid"
+            borderColor="whiteAlpha.400"
+            borderRadius="md"
+            w="100%"
+            mb={3}
+            paddingX={3}
+            paddingY={2}
+          >
+            <Text
+              fontSize="sm"
+              textAlign="center"
+              textOverflow="ellipsis"
+              overflow="hidden"
+              whiteSpace="nowrap"
+            >
+              {picture?.length === 1 ? (
+                picture[0].name
+              ) : (
+                <Text
+                  as="u"
+                  textDecor="underline"
+                  display="inline"
+                  cursor="pointer"
+                  textColor="green.300"
+                >
+                  {picture?.length === 1 ? 'Change Picture' : 'Upload Picture'}
+                </Text>
+              )}
+            </Text>
+          </Box>
+        </FileUpload>
+        <FormErrorMessage>
+          {errors[pictureId]?.message?.toString()}
+        </FormErrorMessage>
+      </FormControl>
       {version === 'XX' ? (
         <Stack>
           {[
@@ -227,6 +239,11 @@ const SongQualifier = ({
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
+  const env = {
+    NEXT_PUBLIC_SITE_URL: process.env.NEXT_PUBLIC_SITE_URL!,
+    NEXT_PUBLIC_VERCEL_URL: process.env.NEXT_PUBLIC_VERCEL_URL!,
+  };
+
   const response = new Response();
   const supabase = createSupabaseServerClient({
     request,
@@ -242,19 +259,21 @@ export const loader: LoaderFunction = async ({ request }) => {
     .select()
     .eq('id', session?.user.id);
 
-  return json({ data: (data && data[0]) ?? [] }, { headers: response.headers });
+  return json(
+    { env, data: (data && data[0]) ?? [] },
+    { headers: response.headers }
+  );
 };
 
 const Qualifiers = () => {
   const { supabase, session } = useOutletContext<OutletContext>();
-  const { data } = useLoaderData<typeof loader>();
-  const [pictureOne, setPictureOne] = useState<File>();
-  const [pictureTwo, setPictureTwo] = useState<File>();
+  const { env, data } = useLoaderData<typeof loader>();
 
   const {
     handleSubmit,
     register,
     watch,
+    control,
     formState: { errors, isSubmitting, isValid },
   } = useForm({
     defaultValues: {
@@ -294,23 +313,33 @@ const Qualifiers = () => {
     supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: getRedirectURL(),
+        redirectTo: getRedirectURL(env),
       },
     });
   };
 
   const onSubmit: SubmitHandler<any> = async (data) => {
-    if (pictureOne === undefined || pictureTwo === undefined) {
-      return;
-    }
+    console.log(data);
 
     const { error: uploadErrorOne } = await supabase.storage
       .from('qualifier_pictures')
-      .upload(`${session.user.id}/song_one.jpg`, pictureOne, { upsert: true });
+      .upload(`${session.user.id}/song_one.jpg`, data.song_one_picture[0], {
+        upsert: true,
+      });
+
+    if (uploadErrorOne) {
+      console.error(uploadErrorOne);
+    }
 
     const { error: uploadErrorTwo } = await supabase.storage
       .from('qualifier_pictures')
-      .upload(`${session.user.id}/song_two.jpg`, pictureTwo, { upsert: true });
+      .upload(`${session.user.id}/song_two.jpg`, data.song_two_picture[0], {
+        upsert: true,
+      });
+
+    if (uploadErrorTwo) {
+      console.error(uploadErrorTwo);
+    }
 
     const { error } = await supabase.from('qualifiers').upsert({
       id: session.user.id,
@@ -345,7 +374,9 @@ const Qualifiers = () => {
       updated_at: new Date(Date.now()).toISOString(),
     });
 
-    console.error(error);
+    if (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -497,8 +528,6 @@ const Qualifiers = () => {
                     isSubmitting={isSubmitting}
                     errors={errors}
                     index="one"
-                    picture={pictureOne}
-                    setPicture={setPictureOne}
                   />
                   <SongQualifier
                     watch={watch}
@@ -506,14 +535,13 @@ const Qualifiers = () => {
                     isSubmitting={isSubmitting}
                     errors={errors}
                     index="two"
-                    picture={pictureTwo}
-                    setPicture={setPictureTwo}
                   />
                 </HStack>
                 <Divider mb={5} />
                 <Button
                   type="submit"
                   colorScheme="green"
+                  isLoading={isSubmitting}
                   isDisabled={isSubmitting || !isValid}
                 >
                   Submit
