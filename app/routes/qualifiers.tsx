@@ -63,9 +63,9 @@ const validateFile = (value: FileList) => {
   }
   for (const file of Array.from(value)) {
     const fsMb = file.size / (1024 * 1024);
-    const MAX_FILE_SIZE = 8;
+    const MAX_FILE_SIZE = 10;
     if (fsMb > MAX_FILE_SIZE) {
-      return 'Cannot be greater than 8MB';
+      return `Cannot be greater than ${MAX_FILE_SIZE}MB`;
     }
   }
   return true;
