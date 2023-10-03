@@ -4,6 +4,7 @@ import {
   Button,
   Container,
   Flex,
+  HStack,
   Heading,
   Image,
   Link,
@@ -23,9 +24,8 @@ import hero from './assets/guHero.png';
 import guLogo from './assets/gulogo.png';
 import jaekim from './assets/jaekim.png';
 import graeme from './assets/graeme.png';
-import skeptic from './assets/skeptic.png';
-import aSiteDeLaRue from './assets/asitedelarue.png';
-import sarabande from './assets/sarabande.png';
+import guac7GauntletSchedule from './assets/guac7GauntletSchedule.png';
+import guac7ProSchedule from './assets/guac7ProSchedule.png';
 import PrizePool from '../components/PrizePool';
 import {
   InfoIcon,
@@ -95,7 +95,7 @@ const Index = () => {
           h="100%"
           animation={`${fadeIn} 1.2s ease-in-out`}
         >
-          <Image src={guLogo} h="240px" marginTop="40px" mr="3" />
+          <Image src={guLogo} h="150px" mr={8} />
           <Box>
             <Heading as="h1" size="4xl" color="white" mb="2">
               GUAC 7 Pump
@@ -255,12 +255,29 @@ const Index = () => {
       <Container py="12" maxW="container.lg">
         <Flex flexDirection="column" alignItems="center" mb="6">
           <Heading as="h2" color="white" mb="3">
-            Schedule
+            Leaderboard
           </Heading>
           <Text color="white" fontWeight="semibold">
-            TBD!
+            The top 10 players are placed in the Pro Division.
           </Text>
         </Flex>
+        <TableContainer borderRadius="md" bg="whiteAlpha.100">
+          <Table variant="striped" colorScheme="whiteAlpha">
+            <Thead>
+              <Tr>
+                <Th>Seed</Th>
+                <Th>Player</Th>
+                <Th>Rating</Th>
+                <Th>Song 1</Th>
+                <Th>Song 2</Th>
+              </Tr>
+            </Thead>
+            <Tbody></Tbody>
+            <TableCaption fontWeight="bold" p="6">
+              No submissions yet!
+            </TableCaption>
+          </Table>
+        </TableContainer>
       </Container>
       <Box bgColor="green.600">
         <Container py="12" maxW="container.lg">
@@ -309,29 +326,21 @@ const Index = () => {
       <Container py="12" maxW="container.lg">
         <Flex flexDirection="column" alignItems="center" mb="6">
           <Heading as="h2" color="white" mb="3">
-            Leaderboard
+            Schedule
           </Heading>
           <Text color="white" fontWeight="semibold">
-            The top 10 players are placed in the Pro Division.
+            Schedule is subject to change. A finalized schedule will be released
+            closer to the event.
           </Text>
+          <Flex
+            justify="center"
+            align="center"
+            flexDir={['column', 'column', 'row']}
+          >
+            <Image maxW={['100%', '100%', '50%']} src={guac7GauntletSchedule} />
+            <Image maxW={['100%', '100%', '50%']} src={guac7ProSchedule} />
+          </Flex>
         </Flex>
-        <TableContainer borderRadius="md" bg="whiteAlpha.100">
-          <Table variant="striped" colorScheme="whiteAlpha">
-            <Thead>
-              <Tr>
-                <Th>Seed</Th>
-                <Th>Player</Th>
-                <Th>Rating</Th>
-                <Th>Song 1</Th>
-                <Th>Song 2</Th>
-              </Tr>
-            </Thead>
-            <Tbody></Tbody>
-            <TableCaption fontWeight="bold" p="6">
-              No submissions yet!
-            </TableCaption>
-          </Table>
-        </TableContainer>
       </Container>
     </>
   );
