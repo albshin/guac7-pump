@@ -4,3 +4,5 @@ export type OutletContext = {
   supabase: SupabaseClient;
   session: Session;
 };
+
+export type GameVersion = 'XX' | 'Phoenix';

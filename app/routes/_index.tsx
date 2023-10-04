@@ -14,6 +14,7 @@ import {
   TableCaption,
   TableContainer,
   Tbody,
+  Td,
   Text,
   Th,
   Thead,
@@ -33,9 +34,11 @@ import {
   PlusSquareIcon,
   ViewIcon,
 } from '@chakra-ui/icons';
-import { Link as RemixLink } from '@remix-run/react';
+import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { qualifierSongs } from '~/utils/qualifierSongs';
+import { LoaderFunction, json } from '@remix-run/node';
+import { createSupabaseServerClient } from '~/utils/supabase.server';
 
 const pictureFadeIn = keyframes({
   '0%': {
@@ -85,7 +88,25 @@ const qualifierAnimation = {
   }),
 };
 
+export const loader: LoaderFunction = async ({ request }) => {
+  const response = new Response();
+  const supabase = createSupabaseServerClient({
+    request,
+    response,
+  });
+
+  const { data } = await supabase
+    .from('qualifiers')
+    .select('*')
+    .neq('total_rating', 0)
+    .order('total_rating', { ascending: false });
+
+  return json({ data: data ?? [] }, { headers: response.headers });
+};
+
 const Index = () => {
+  const { data } = useLoaderData<typeof loader>();
+
   return (
     <>
       <Box bgColor={'green.600'} p={6} h="350px">
@@ -134,7 +155,7 @@ const Index = () => {
         </Stack>
         <Stack
           direction={['column', 'column', 'row']}
-          mb={[8, 8, 2]}
+          mb={12}
           justify="center"
           color="white"
           columnGap="80px"
@@ -143,7 +164,9 @@ const Index = () => {
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <AtSignIcon mr={3} color="green.500" />
-                <Text fontWeight="bold">Regional Competition</Text>
+                <Text fontWeight="bold" fontSize="xl">
+                  Regional Competition
+                </Text>
               </Flex>
               <Text>
                 Featuring the best players from New England, Oregon, Texas,
@@ -153,7 +176,9 @@ const Index = () => {
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <PlusSquareIcon mr={3} color="green.500" />
-                <Text fontWeight="bold">Prize Pool</Text>
+                <Text fontWeight="bold" fontSize="lg">
+                  Prize Pool
+                </Text>
               </Flex>
               <Text>
                 Featuring a $250 base prize pool! The top 5 players will receive
@@ -163,14 +188,18 @@ const Index = () => {
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <ViewIcon mr={3} color="green.500" />
-                <Text fontWeight="bold">Improved Stream</Text>
+                <Text fontWeight="bold" fontSize="lg">
+                  Improved Stream
+                </Text>
               </Flex>
               <Text>New dedicated stream setup and modern equipment</Text>
             </Box>
             <Box>
               <Flex alignItems={'center'} mb={1}>
                 <InfoIcon mr={3} color="green.500" />
-                <Text fontWeight="bold">Updated Ruleset</Text>
+                <Text fontWeight="bold" fontSize="lg">
+                  Updated Ruleset
+                </Text>
               </Flex>
               <Text>
                 New and exciting ruleset designed to keep each round feeling
@@ -189,7 +218,7 @@ const Index = () => {
         </Stack>
         <PrizePool />
       </Container>
-      <Box bg="green.600">
+      <Box bg="green.600" fontSize="sm">
         <Container py="12" maxW="container.lg">
           <Flex flexDirection="column" alignItems="center" mb="6">
             <Heading as="h2" color="white" mb="3">
@@ -261,8 +290,8 @@ const Index = () => {
             The top 10 players are placed in the Pro Division.
           </Text>
         </Flex>
-        <TableContainer borderRadius="md" bg="whiteAlpha.100">
-          <Table variant="striped" colorScheme="whiteAlpha">
+        <TableContainer borderRadius="md" bg="whiteAlpha.100" px={3} py={3}>
+          <Table colorScheme="whiteAlpha">
             <Thead>
               <Tr>
                 <Th>Seed</Th>
@@ -272,10 +301,44 @@ const Index = () => {
                 <Th>Song 2</Th>
               </Tr>
             </Thead>
-            <Tbody></Tbody>
-            <TableCaption fontWeight="bold" p="6">
-              No submissions yet!
-            </TableCaption>
+            <Tbody>
+              {data.map((qualifier: any, i: number) => (
+                <Tr key={qualifier.email} fontWeight="semibold">
+                  <Td>{`${i <= 9 && '⭐ '}${i + 1}`}</Td>
+                  <Td>{qualifier.username}</Td>
+                  <Td>{qualifier.total_rating}</Td>
+                  <Td fontSize="sm">
+                    <Box>
+                      <Text>
+                        {`${qualifier.song_one.name} ${qualifier.song_one.difficulty}`}
+                      </Text>
+                      <Text fontWeight="normal">
+                        {`${Intl.NumberFormat().format(
+                          qualifier.song_one.score
+                        )} (Rating: ${qualifier.song_one.rating})`}
+                      </Text>
+                    </Box>
+                  </Td>
+                  <Td fontSize="sm">
+                    <Box>
+                      <Text>
+                        {`${qualifier.song_two.name} ${qualifier.song_two.difficulty}`}
+                      </Text>
+                      <Text fontWeight="normal">
+                        {`${Intl.NumberFormat().format(
+                          qualifier.song_two.score
+                        )} (Rating: ${qualifier.song_two.rating})`}
+                      </Text>
+                    </Box>
+                  </Td>
+                </Tr>
+              ))}
+            </Tbody>
+            {data.length === 0 && (
+              <TableCaption fontWeight="bold" p="6">
+                No submissions yet!
+              </TableCaption>
+            )}
           </Table>
         </TableContainer>
       </Container>
@@ -286,9 +349,9 @@ const Index = () => {
               Qualifiers
             </Heading>
             <Text color="white" fontWeight="semibold">
-              Players must choose TWO songs to play. A rating will be calculated
-              based on the player's performance and the song's difficulty.
-              Performing better on harder songs will net you a higher rating.
+              A rating will be calculated based on the player's performance and
+              the song's difficulty. Performing better on harder songs will net
+              you a higher rating.
             </Text>
           </Flex>
           <SimpleGrid columns={[1, 2, 3, 4]} spacing={[4, 6, 6, 10]}>
