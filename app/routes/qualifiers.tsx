@@ -47,6 +47,7 @@ const fadeInHero = keyframes({
 });
 
 interface SongQualiferProps {
+  defaultSong?: string;
   index: 'one' | 'two';
   register: UseFormRegister<any>;
   watch: any;
@@ -73,6 +74,7 @@ const validateFile = (value: FileList) => {
 
 const SongQualifier = ({
   register,
+  defaultSong = 'District 1',
   errors,
   watch,
   isSubmitting,
@@ -83,11 +85,12 @@ const SongQualifier = ({
   const scoreId = `song_${index}_score`;
   const pictureId = `song_${index}_picture`;
   const version = watch(versionId);
-  const songName = watch(songId, 'District 1');
+  const songName = watch(songId, defaultSong);
   const picture = watch(pictureId);
+  const otherSong = `song_${index === 'one' ? 'two' : 'one'}_name`;
 
   return (
-    <Stack flex="1" alignSelf="flex-start">
+    <Stack flex="1" alignSelf="flex-start" minWidth={0}>
       <FormControl>
         <FormLabel>Version</FormLabel>
         <Select
@@ -101,43 +104,54 @@ const SongQualifier = ({
           <option value="Phoenix">Pump It Up Phoenix</option>
         </Select>
       </FormControl>
-      <FormControl>
+      <FormControl isInvalid={!!errors[songId]}>
         <FormLabel>Song</FormLabel>
         <Select
+          defaultValue={songName}
           size="sm"
           mb={3}
           {...register(songId, {
             required: true,
+            validate: (value: string, formValues) => {
+              if (value === formValues[otherSong]) {
+                return 'Songs must not be the same';
+              }
+              return true;
+            },
           })}
         >
           {qualifierSongs.map((qualifier) => (
             <option
               value={qualifier.name}
-              key={`song_${index}_${qualifier.difficulty}`}
+              key={`song_${index}_${qualifier.name}`}
             >
               {qualifier.name} {qualifier.difficulty}
             </option>
           ))}
         </Select>
+        <Box
+          w="100%"
+          height="200px"
+          border="3px red solid"
+          borderColor={
+            qualifierSongs.find((qualifer) => qualifer.name === songName)
+              ?.border ?? 'red'
+          }
+          bgColor="whiteAlpha.100"
+          bgImage={
+            qualifierSongs.find((qualifer) => qualifer.name === songName)?.image
+          }
+          bgRepeat="no-repeat"
+          bgPos="center"
+          bgSize="cover"
+          borderRadius="md"
+          mb={2}
+        />
+        <FormErrorMessage>
+          {errors[songId]?.message?.toString()}
+        </FormErrorMessage>
       </FormControl>
-      <Box
-        w="100%"
-        height="200px"
-        border="3px red solid"
-        borderColor={
-          qualifierSongs.find((qualifer) => qualifer.name === songName)
-            ?.border ?? 'red'
-        }
-        bgColor="whiteAlpha.100"
-        bgImage={
-          qualifierSongs.find((qualifer) => qualifer.name === songName)?.image
-        }
-        bgRepeat="no-repeat"
-        bgPos="center"
-        bgSize="cover"
-        borderRadius="md"
-        mb={5}
-      />
+
       <FormControl isInvalid={!errors.pictureId} isRequired>
         <FileUpload
           name={pictureId}
@@ -147,7 +161,7 @@ const SongQualifier = ({
         >
           <Box
             border="2px solid"
-            borderColor="whiteAlpha.400"
+            borderColor={picture?.length === 1 ? 'whiteAlpha.400' : 'red.500'}
             borderRadius="md"
             w="100%"
             mb={3}
@@ -156,10 +170,10 @@ const SongQualifier = ({
           >
             <Text
               fontSize="sm"
-              textAlign="center"
               textOverflow="ellipsis"
               overflow="hidden"
               whiteSpace="nowrap"
+              textAlign="center"
             >
               {picture?.length === 1 ? (
                 picture[0].name
@@ -169,7 +183,9 @@ const SongQualifier = ({
                   textDecor="underline"
                   display="inline"
                   cursor="pointer"
-                  textColor="green.300"
+                  textColor={
+                    picture?.length === 1 ? 'whiteAlpha.400' : 'red.500'
+                  }
                 >
                   {picture?.length === 1 ? 'Change Picture' : 'Upload Picture'}
                 </Text>
@@ -404,16 +420,36 @@ const Qualifiers = () => {
               <Text fontWeight="bold">Back to Home</Text>
             </Flex>
           </Link>
-          {!session?.user && (
+          {!session?.user ? (
             <Button colorScheme="green" onClick={onAuthenticate}>
               Sign in with Google
             </Button>
+          ) : (
+            <Stack>
+              <Text
+                textAlign="right"
+                fontSize="md"
+                fontWeight="semibold"
+                mb={2}
+              >
+                Signed in as {session?.user.email}
+              </Text>
+              <Button
+                variant="link"
+                colorScheme="green"
+                ml="auto"
+                onClick={onAuthenticate}
+              >
+                Change User
+              </Button>
+            </Stack>
           )}
         </Flex>
         <form onSubmit={handleSubmit(onSubmit)}>
           <Flex
             bg="whiteAlpha.100"
-            padding={8}
+            paddingX={8}
+            paddingY={5}
             borderRadius="md"
             justify="center"
             align="center"
@@ -522,6 +558,7 @@ const Qualifiers = () => {
                 <Heading size="md">Qualifiers</Heading>
                 <HStack spacing="8" mb={5}>
                   <SongQualifier
+                    defaultSong="District 1"
                     watch={watch}
                     register={register}
                     isSubmitting={isSubmitting}
@@ -529,6 +566,7 @@ const Qualifiers = () => {
                     index="one"
                   />
                   <SongQualifier
+                    defaultSong="Black Swan"
                     watch={watch}
                     register={register}
                     isSubmitting={isSubmitting}
