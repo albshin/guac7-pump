@@ -6,7 +6,7 @@ const PrizePool = () => {
 
   // TODO: Replace with fetch from start.gg
   useEffect(() => {
-    const delay = setTimeout(() => setProgress(8), 800);
+    const delay = setTimeout(() => setProgress(31), 800);
 
     return () => {
       clearTimeout(delay);

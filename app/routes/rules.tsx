@@ -70,9 +70,9 @@ Rounds may be adjusted during the tournament based on the number of registrants.
 ### 🚀 Qualification
 All players must submit TWO qualifying scores by **November 10, 2023, 11:59pm EST**.
 
-There are eight qualifying songs in total. The qualifying rating of the two qualifying songs you choose will be added together as your qualifying score. Your qualifying rating will be used to seed you at the event. Top 10 seeds will be seeded into the Pro Bracket. All other seeds will be seeded into the Amateur Bracket.
+There are eight qualifying songs in total. Players will receive a rating based on Pump It Up Phoenix's rating system for both song played. The achieved rating of the two songs chosen will be added together and used for seeding. The top 10 seeds will be seeded into the Pro Bracket while all other seeds will be seeded into the Amateur Bracket.
 
-Players will be allowed to submit scores from either an XX cab or a Phoenix cab. Please see later in the section to read on how to submit scores for each cab type.
+Players will be allowed to submit scores from either an XX cab or a Phoenix cab. Scores from Pump It Up XX will be converted as accurately as possible to Phoenix's score system. Please note that the organizers are not responsible for any mistypes into the qualifier submission form that may affect seeding.
 
 #### Qualification Chart Pool
 
@@ -90,7 +90,7 @@ Players will be allowed to submit scores from either an XX cab or a Phoenix cab.
 Qualifying rating will be calculated using a modified version of the Phoenix rating system where failed scores will still give rating in the qualifying leaderboard and scores of 875,000 points or lower will be given a rating of 0 for that qualifying score.
 
 #### Qualifier Tiebreakers
-Phoenix rating ties will be broken by the total score of the two qualifying charts submitted. Second tiebreaker will be the earliest score submission.
+Tiebreakers will be broken by the total score of the two qualifying charts submitted. Second tiebreaker will be the earliest score submission.
 
 Photos are required with every score submission. Rules for photo submissions:
 1. Modifiers must be clearly visible (Normal judgment must be used)
@@ -159,7 +159,7 @@ Point allocation may be adjusted depending on the number of tournament entrants.
 - **Date**: November 12th, 2023
 - **Format**: Double Elimination
   - **General**: BO3
-  - **Losers/Winners/Grand Finals**: BO5
+  - **Loser's/Winner's/Grand Finals**: BO5
 - **Player Count**: 12 (10 Qualified, 2 from the Gauntlet)
 - **Difficulty Range**
   - **Winner's R1**: S21 - D23 
@@ -172,6 +172,57 @@ Point allocation may be adjusted depending on the number of tournament entrants.
   - **Winner's Finals**: S24 - D26 
   - **Loser's Finals**: S25 - D26 
   - **Grand Finals**: S25/D25+ 
+
+#### Card Draw
+GUAC 7 introduces new rules to reduce the amount of duplicate songs and add more strategy into the tournament
+
+- The number of bans will be reduced to prevent players from favoring the same songs across tournaments
+- Competitors all start with two re-draws that can be used throughout the bracket
+  - Re-draws allow competitors to choose any song in the draw and re-randomize it after initial bans are complete
+  - A player can re-draw up to twice in a single match
+  - Players can only hold up to a maximum of two re-draws at any time
+  - Players who reach the following stages will receive an additional re-draw
+    - Winner's Semis
+    - Loser's Quarters
+    - Loser's Finals
+    - Grand Finals
+- For each round in the tournament, the song pool will be split evenly based on the number of matches in the round
+  - This ensures that all songs across each match in a round are unique
+  - With the exception: Loser's Finals and Winner's Finals are grouped together as one round
+  - Splits per Round
+    - Winner's R1: 4
+    - Winner's Quarters: 4
+    - Loser's R1: 4
+    - Loser's R2: 2
+    - Winner's Semis: 2
+    - Loser's Quarters: 2
+    - Loser's Semis: 1 (no split)
+    - Loser's Finals/Winner's Finals: 2 (split between the two matches)
+    - Grand Finals: 1 (no split)
+
+#### Best of 3 (BO3)
+5 songs will be drawn and 2 songs will be banned. Players will then choose to re-draw if they have any reminaing. Lower seed bans/re-draws first.
+
+1. Lower seed bans
+1. Higher seed bans
+1. Lower seed optionally uses re-draw if they have any remaining
+1. Higher seed optionally uses re-draw if they have any remaining
+1. Lower seed optionally uses re-draw if they have any remaining
+1. Higher seed optionally uses re-draw if they have any remaining
+1. Players play the 3 remaining songs
+
+#### Best of 5 (BO5)
+9 songs will be drawn and 4 songs will be banned. Players will then choose to re-draw if they have any remaining. Lower seed bans/re-draws first.
+
+1. Lower seed bans
+1. Higher seed bans
+1. Lower seed bans
+1. Higher seed bans
+1. Lower seed optionally uses re-draw if they have any remaining
+1. Higher seed optionally uses re-draw if they have any remaining
+1. Lower seed optionally uses re-draw if they have any remaining
+1. Higher seed optionally uses re-draw if they have any remaining
+1. Players play the 5 remaining songs
 `;
 const fadeInHero = keyframes({
   '0%': {
@@ -230,7 +281,7 @@ const Rules = () => {
             <Text fontWeight="bold">Back to Home</Text>
           </Flex>
         </Link>
-        <Box animation={`${fadeIn} 1.2s linear`}>
+        <Box animation={`${fadeIn} 1.2s linear`} fontSize="sm">
           <Markdown remarkPlugins={[gfm]} components={ChakraUIRenderer()}>
             {markdown}
           </Markdown>

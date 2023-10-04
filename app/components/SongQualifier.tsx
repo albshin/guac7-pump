@@ -154,15 +154,18 @@ const SongQualifier = ({
           ))}
         </Select>
         {previousScore !== undefined && (
-          <Text
-            mb={3}
+          <Box
             fontSize="sm"
             fontWeight="semibold"
             textAlign="center"
             color={!editable ? 'whiteAlpha.500' : 'white'}
+            mb={3}
           >
-            Previous Score: {Intl.NumberFormat().format(previousScore)}
-          </Text>
+            <Text>Previous Score</Text>
+            <Text mt={-1} fontWeight="normal">
+              {Intl.NumberFormat().format(previousScore)}
+            </Text>
+          </Box>
         )}
         <Flex
           w="100%"

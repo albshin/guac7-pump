@@ -252,7 +252,7 @@ const Qualifiers = () => {
       <Container py="12" maxW="container.md">
         <Flex justifyContent="space-between" align="center" mb={12}>
           <Link as={RemixLink} to="/" color="green.200" textDecor="underline">
-            <Flex alignItems="center">
+            <Flex alignItems="center" mr={8}>
               <ArrowBackIcon mr={3} />
               <Text fontWeight="bold">Back to Home</Text>
             </Flex>
