@@ -268,6 +268,10 @@ const Qualifiers = () => {
                     type="text"
                     {...register('username', {
                       required: 'Username is required',
+                      maxLength: {
+                        value: 30,
+                        message: 'Cannot be longer than 30 characters',
+                      },
                     })}
                   />
                   <FormErrorMessage>
@@ -281,6 +285,10 @@ const Qualifiers = () => {
                     size="sm"
                     {...register('location', {
                       required: 'Location is required',
+                      maxLength: {
+                        value: 40,
+                        message: 'Cannot be longer than 40 characters',
+                      },
                     })}
                   />
                   <FormErrorMessage>
@@ -296,6 +304,10 @@ const Qualifiers = () => {
                     type="text"
                     size="sm"
                     {...register('title', {
+                      maxLength: {
+                        value: 40,
+                        message: 'Cannot be longer than 40 characters',
+                      },
                       required: 'Title is required',
                     })}
                   />
