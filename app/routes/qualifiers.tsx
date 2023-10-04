@@ -1,4 +1,4 @@
-import { ArrowBackIcon, WarningIcon } from '@chakra-ui/icons';
+import { ArrowBackIcon, LinkIcon, WarningIcon } from '@chakra-ui/icons';
 import {
   Container,
   Flex,
@@ -83,6 +83,7 @@ const Qualifiers = () => {
     handleSubmit,
     register,
     watch,
+    resetField,
     formState: { errors, isSubmitting, isDirty },
   } = useForm({
     defaultValues: {
@@ -94,8 +95,23 @@ const Qualifiers = () => {
 
       song_one_version: data?.song_one?.version,
       song_one_name: data?.song_one?.name,
+      song_one_score: data?.song_one?.score,
+      song_one_perfect: data?.song_one?.breakdown?.perfect,
+      song_one_great: data?.song_one?.breakdown?.great,
+      song_one_good: data?.song_one?.breakdown?.good,
+      song_one_bad: data?.song_one?.breakdown?.bad,
+      song_one_miss: data?.song_one?.breakdown?.miss,
+      song_one_maxCombo: data?.song_one?.breakdown?.maxCombo,
+
       song_two_version: data?.song_two?.version,
       song_two_name: data?.song_two?.name,
+      song_two_score: data?.song_two?.score,
+      song_two_perfect: data?.song_two?.breakdown?.perfect,
+      song_two_great: data?.song_two?.breakdown?.great,
+      song_two_good: data?.song_two?.breakdown?.good,
+      song_two_bad: data?.song_two?.breakdown?.bad,
+      song_two_miss: data?.song_two?.breakdown?.miss,
+      song_two_maxCombo: data?.song_two?.breakdown?.maxCombo,
     },
     mode: 'onChange',
     shouldUnregister: true,
@@ -135,45 +151,66 @@ const Qualifiers = () => {
     return { ...songData, difficulty, rating, score };
   };
 
+  const handleError = (err: any) => {
+    console.error(err);
+    toast({
+      title: 'Error',
+      description:
+        'An error has occurred! If this persists please message @deadcake on Discord.',
+      status: 'error',
+    });
+  };
+
   const onSubmit: SubmitHandler<any> = async (data) => {
-    try {
-      await supabase.storage
+    if (!data.song_one_picture && !data.song_two_picture) {
+      handleError('Both pictures were not supplied!');
+    }
+
+    if (data.song_one_picture && data.song_one_picture.length === 1) {
+      const { error: pictureOneError } = await supabase.storage
         .from('qualifier_pictures')
         .upload(`${session.user.id}/song_one.jpg`, data.song_one_picture[0], {
           upsert: true,
         });
+      if (pictureOneError) {
+        handleError(pictureOneError);
+        return;
+      }
+    }
 
-      await supabase.storage
+    if (data.song_two_picture && data.song_two_picture.length === 1) {
+      const { error: pictureTwoError } = await supabase.storage
         .from('qualifier_pictures')
         .upload(`${session.user.id}/song_two.jpg`, data.song_two_picture[0], {
           upsert: true,
         });
+      if (pictureTwoError) {
+        handleError(pictureTwoError);
+        return;
+      }
+    }
 
-      const songOneData = prepareSongData('one', data);
-      const songTwoData = prepareSongData('two', data);
-      const totalRating = songOneData.rating + songTwoData.rating;
+    const songOneData = prepareSongData('one', data);
+    const songTwoData = prepareSongData('two', data);
+    const totalRating = songOneData.rating + songTwoData.rating;
 
-      await supabase.from('qualifiers').upsert({
-        id: session.user.id,
-        username: data.username,
-        email: session.user.email,
-        questions: {
-          location: data.location,
-          title: data.title,
-          strongest_skill: data.strongest_skill,
-          weakest_skill: data.weakest_skill,
-        },
-        song_one: songOneData,
-        song_two: songTwoData,
-        total_rating: totalRating,
-      });
-    } catch (e) {
-      toast({
-        title: 'Error',
-        description:
-          'An error has occurred! If this persists please message @deadcake on Discord.',
-        status: 'error',
-      });
+    const { error } = await supabase.from('qualifiers').upsert({
+      id: session.user.id,
+      username: data.username,
+      email: session.user.email,
+      questions: {
+        location: data.location,
+        title: data.title,
+        strongest_skill: data.strongest_skill,
+        weakest_skill: data.weakest_skill,
+      },
+      song_one: songOneData,
+      song_two: songTwoData,
+      total_rating: totalRating,
+    });
+    if (error) {
+      handleError(error);
+      return;
     }
 
     toast({
@@ -215,20 +252,10 @@ const Qualifiers = () => {
             </Button>
           ) : (
             <Stack>
-              <Text
-                textAlign="right"
-                fontSize="md"
-                fontWeight="semibold"
-                mb={2}
-              >
+              <Text textAlign="right" fontSize="md" fontWeight="semibold">
                 Signed in as {session?.user.email}
               </Text>
-              <Button
-                variant="link"
-                colorScheme="green"
-                ml="auto"
-                onClick={onAuthenticate}
-              >
+              <Button variant="link" colorScheme="green" ml="auto">
                 Change User
               </Button>
             </Stack>
@@ -356,20 +383,40 @@ const Qualifiers = () => {
                   </FormControl>
                 </HStack>
                 <Divider my={5} />
-                <Heading size="md">Qualifiers</Heading>
+                <HStack
+                  justifyContent="space-between"
+                  justify="center"
+                  align="center"
+                >
+                  <Heading size="md">Qualifiers</Heading>
+                  <a
+                    href="https://piuscores.arroweclip.se/PhoenixCalculator"
+                    target="_blank"
+                  >
+                    <Button variant="link" colorScheme="blue" size="sm">
+                      <LinkIcon mr={1} /> Phoenix Score Converter
+                    </Button>
+                  </a>
+                </HStack>
                 <HStack spacing={5} mb={5}>
                   <SongQualifier
                     defaultSong="District 1"
+                    previousScore={data?.song_one?.score}
                     watch={watch}
                     register={register}
+                    resetField={resetField}
+                    isEditable={data.song_one === undefined}
                     isSubmitting={isSubmitting}
                     errors={errors}
                     index="one"
                   />
                   <SongQualifier
                     defaultSong="Black Swan"
+                    previousScore={data?.song_two?.score}
                     watch={watch}
                     register={register}
+                    resetField={resetField}
+                    isEditable={data.song_two === undefined}
                     isSubmitting={isSubmitting}
                     errors={errors}
                     index="two"

@@ -8,10 +8,18 @@ type FileUploadProps = {
   accept?: string;
   multiple?: boolean;
   children?: ReactNode;
+  isDisabled?: boolean;
 };
 
 const FileUpload = (props: FileUploadProps) => {
-  const { register, accept, multiple = false, children, name } = props;
+  const {
+    register,
+    accept,
+    multiple = false,
+    children,
+    name,
+    isDisabled = false,
+  } = props;
   const inputRef = useRef<HTMLInputElement | null>(null);
   const { ref, ...rest } = register as {
     ref: (instance: HTMLInputElement | null) => void;
@@ -24,6 +32,7 @@ const FileUpload = (props: FileUploadProps) => {
       <input
         type={'file'}
         name={name}
+        disabled={isDisabled}
         multiple={multiple}
         hidden
         accept={accept}
