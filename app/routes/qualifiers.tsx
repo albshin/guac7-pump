@@ -1,4 +1,11 @@
-import { ArrowBackIcon, LinkIcon, WarningIcon } from '@chakra-ui/icons';
+import {
+  ArrowBackIcon,
+  CheckIcon,
+  LinkIcon,
+  ViewIcon,
+  ViewOffIcon,
+  WarningIcon,
+} from '@chakra-ui/icons';
 import {
   Container,
   Flex,
@@ -36,6 +43,7 @@ import {
   calculateScore,
 } from '~/utils/rating';
 import { qualifierDifficulty } from '~/utils/qualifierSongs';
+import { useState } from 'react';
 
 const fadeInHero = keyframes({
   '0%': {
@@ -84,7 +92,7 @@ const Qualifiers = () => {
     register,
     watch,
     resetField,
-    formState: { errors, isSubmitting, isDirty },
+    formState: { errors, isSubmitting, isDirty, isSubmitSuccessful },
   } = useForm({
     defaultValues: {
       username: data.username,
@@ -117,6 +125,8 @@ const Qualifiers = () => {
     shouldUnregister: true,
   });
 
+  const isNewUser = data?.username === undefined;
+  const [showInformation, setShowInformation] = useState(isNewUser);
   const selectedStrongestSkill = watch<any>('strongest_skill', 'Run');
   const selectedWeakestSkill = watch<any>('weakest_skill', 'Drill');
 
@@ -164,6 +174,7 @@ const Qualifiers = () => {
   const onSubmit: SubmitHandler<any> = async (data) => {
     if (!data.song_one_picture && !data.song_two_picture) {
       handleError('Both pictures were not supplied!');
+      return;
     }
 
     if (data.song_one_picture && data.song_one_picture.length === 1) {
@@ -214,7 +225,7 @@ const Qualifiers = () => {
     }
 
     toast({
-      title: 'Qualifier submitted',
+      title: 'Success',
       description: 'Your qualifier was submitted.',
       status: 'success',
     });
@@ -281,108 +292,143 @@ const Qualifiers = () => {
                 />
                 <Heading size="md">Sign in to Submit Qualifiers</Heading>
               </Stack>
+            ) : isSubmitSuccessful ? (
+              <Flex
+                px={5}
+                py={12}
+                justify="center"
+                align="center"
+                flexDir="column"
+              >
+                <CheckIcon boxSize={32} mb={12} />
+                <Heading textAlign="center" fontSize="3xl">
+                  Your qualifier was submitted successfully!
+                </Heading>
+              </Flex>
             ) : (
               <Stack>
-                <Heading size="md">Information</Heading>
-                <Text fontSize="md">
-                  Questions will be used by the stream production team to
-                  deliver a high quality broadcast!
-                </Text>
-                <FormControl isInvalid={!!errors.username}>
-                  <FormLabel>start.gg Username</FormLabel>
-                  <Input
-                    size="sm"
-                    type="text"
-                    {...register('username', {
-                      required: 'Username is required',
-                      maxLength: {
-                        value: 30,
-                        message: 'Cannot be longer than 30 characters',
-                      },
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {errors?.username?.message?.toString()}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.location}>
-                  <FormLabel>What state/province are you from?</FormLabel>
-                  <Input
-                    type="text"
-                    size="sm"
-                    {...register('location', {
-                      required: 'Location is required',
-                      maxLength: {
-                        value: 40,
-                        message: 'Cannot be longer than 40 characters',
-                      },
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {errors?.location?.message?.toString()}
-                  </FormErrorMessage>
-                </FormControl>
-                <FormControl isInvalid={!!errors.title}>
-                  <FormLabel>
-                    What is your highest XX or Phoenix level title? (ex.
-                    Advanced 1, Expert 2, etc)
-                  </FormLabel>
-                  <Input
-                    type="text"
-                    size="sm"
-                    {...register('title', {
-                      maxLength: {
-                        value: 40,
-                        message: 'Cannot be longer than 40 characters',
-                      },
-                      required: 'Title is required',
-                    })}
-                  />
-                  <FormErrorMessage>
-                    {errors?.title?.message?.toString()}
-                  </FormErrorMessage>
-                </FormControl>
-                <HStack gap={3}>
-                  <FormControl>
-                    <FormLabel>What is your strongest skill?</FormLabel>
-
-                    <Select
-                      size="sm"
-                      {...register('strongest_skill', {
-                        required: 'Required',
-                      })}
+                <HStack justifyContent="space-between" align="center">
+                  <Heading size="md">Information</Heading>
+                  {!isNewUser && (
+                    <Button
+                      variant="ghost"
+                      colorScheme="green"
+                      onClick={() =>
+                        setShowInformation((prevState) => !prevState)
+                      }
                     >
-                      {['Run', 'Drill', 'Gimmick', 'Twist', 'Bracket', 'Half']
-                        .filter((skill) => skill !== selectedWeakestSkill)
-                        .map((skill) => (
-                          <option key={`strongest-${skill}`}>{skill}</option>
-                        ))}
-                    </Select>
-                    <FormErrorMessage>
-                      {errors?.strongest_skill?.message?.toString()}
-                    </FormErrorMessage>
-                  </FormControl>
-                  <FormControl>
-                    <FormLabel>What is your weakest skill?</FormLabel>
-
-                    <Select
-                      {...register('weakest_skill', {
-                        required: 'Required',
-                      })}
-                      size="sm"
-                    >
-                      {['Run', 'Drill', 'Gimmick', 'Twist', 'Bracket', 'Half']
-                        .filter((skill) => skill !== selectedStrongestSkill)
-                        .map((skill) => (
-                          <option key={`weakest-${skill}`}>{skill}</option>
-                        ))}
-                    </Select>
-                    <FormErrorMessage>
-                      {errors?.weakest_skill?.message?.toString()}
-                    </FormErrorMessage>
-                  </FormControl>
+                      <Text mr={2}>{showInformation ? 'Hide' : 'Show'} </Text>
+                      {showInformation ? <ViewOffIcon /> : <ViewIcon />}
+                    </Button>
+                  )}
                 </HStack>
-                <Divider my={5} />
+                <Stack
+                  opacity={showInformation ? 100 : 0}
+                  height={showInformation ? '100%' : 0}
+                >
+                  <Text fontSize="md">
+                    Questions will be used by the stream production team to
+                    deliver a high quality broadcast!
+                  </Text>
+                  <FormControl isInvalid={!!errors.username}>
+                    <FormLabel>start.gg Username</FormLabel>
+                    <Input
+                      size="sm"
+                      type="text"
+                      {...register('username', {
+                        required: 'Username is required',
+                        maxLength: {
+                          value: 30,
+                          message: 'Cannot be longer than 30 characters',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors?.username?.message?.toString()}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.location}>
+                    <FormLabel>What state/province are you from?</FormLabel>
+                    <Input
+                      type="text"
+                      size="sm"
+                      {...register('location', {
+                        required: 'Location is required',
+                        maxLength: {
+                          value: 40,
+                          message: 'Cannot be longer than 40 characters',
+                        },
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors?.location?.message?.toString()}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <FormControl isInvalid={!!errors.title}>
+                    <FormLabel>
+                      What is your highest XX or Phoenix level title? (ex.
+                      Advanced 1, Expert 2, etc)
+                    </FormLabel>
+                    <Input
+                      type="text"
+                      size="sm"
+                      {...register('title', {
+                        maxLength: {
+                          value: 40,
+                          message: 'Cannot be longer than 40 characters',
+                        },
+                        required: 'Title is required',
+                      })}
+                    />
+                    <FormErrorMessage>
+                      {errors?.title?.message?.toString()}
+                    </FormErrorMessage>
+                  </FormControl>
+                  <HStack gap={3}>
+                    <FormControl>
+                      <FormLabel>What is your strongest skill?</FormLabel>
+
+                      <Select
+                        size="sm"
+                        {...register('strongest_skill', {
+                          required: 'Required',
+                        })}
+                      >
+                        {['Run', 'Drill', 'Gimmick', 'Twist', 'Bracket', 'Half']
+                          .filter((skill) => skill !== selectedWeakestSkill)
+                          .map((skill) => (
+                            <option key={`strongest-${skill}`}>{skill}</option>
+                          ))}
+                      </Select>
+                      <FormErrorMessage>
+                        {errors?.strongest_skill?.message?.toString()}
+                      </FormErrorMessage>
+                    </FormControl>
+                    <FormControl>
+                      <FormLabel>What is your weakest skill?</FormLabel>
+
+                      <Select
+                        {...register('weakest_skill', {
+                          required: 'Required',
+                        })}
+                        size="sm"
+                      >
+                        {['Run', 'Drill', 'Gimmick', 'Twist', 'Bracket', 'Half']
+                          .filter((skill) => skill !== selectedStrongestSkill)
+                          .map((skill) => (
+                            <option key={`weakest-${skill}`}>{skill}</option>
+                          ))}
+                      </Select>
+                      <FormErrorMessage>
+                        {errors?.weakest_skill?.message?.toString()}
+                      </FormErrorMessage>
+                    </FormControl>
+                  </HStack>
+                </Stack>
+                <Divider
+                  my={showInformation ? 5 : 3}
+                  mt={showInformation ? 5 : 0}
+                />
                 <HStack
                   justifyContent="space-between"
                   justify="center"
@@ -427,7 +473,7 @@ const Qualifiers = () => {
                   type="submit"
                   colorScheme="green"
                   isLoading={isSubmitting}
-                  isDisabled={isSubmitting}
+                  isDisabled={isSubmitting || !isDirty}
                 >
                   Submit
                 </Button>

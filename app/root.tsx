@@ -10,6 +10,7 @@ import {
   Scripts,
   ScrollRestoration,
   useLoaderData,
+  useRevalidator,
 } from '@remix-run/react';
 import {
   MetaFunction,
@@ -141,10 +142,27 @@ const Document = withEmotionCache(
 
 export default function App() {
   const { env, session } = useLoaderData();
+  const { revalidate } = useRevalidator();
 
   const [supabase] = useState(() =>
     createBrowserClient(env.SUPABASE_URL!, env.SUPABASE_ANON_KEY!)
   );
+
+  const serverAccessToken = session?.access_token;
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      if (session?.access_token !== serverAccessToken) {
+        revalidate();
+      }
+    });
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, [supabase.auth, serverAccessToken, revalidate]);
+
   return (
     <Document>
       <ChakraProvider theme={theme}>
