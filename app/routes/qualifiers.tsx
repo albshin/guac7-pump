@@ -84,8 +84,8 @@ const SongQualifier = ({
   const songId = `song_${index}_name`;
   const scoreId = `song_${index}_score`;
   const pictureId = `song_${index}_picture`;
-  const version = watch(versionId);
-  const songName = watch(songId, defaultSong);
+  const version = watch(versionId) ?? 'Phoenix';
+  const songName = watch(songId) ?? defaultSong;
   const picture = watch(pictureId);
   const otherSong = `song_${index === 'one' ? 'two' : 'one'}_name`;
 
@@ -94,6 +94,7 @@ const SongQualifier = ({
       <FormControl>
         <FormLabel>Version</FormLabel>
         <Select
+          defaultValue={version}
           key={versionId}
           size="sm"
           {...register(versionId, {
@@ -334,8 +335,6 @@ const Qualifiers = () => {
   };
 
   const onSubmit: SubmitHandler<any> = async (data) => {
-    console.log(data);
-
     const { error: uploadErrorOne } = await supabase.storage
       .from('qualifier_pictures')
       .upload(`${session.user.id}/song_one.jpg`, data.song_one_picture[0], {
@@ -368,6 +367,7 @@ const Qualifiers = () => {
       },
       song_one: {
         version: data.song_one_version,
+        name: data.song_one_name,
         perfect: data.song_one_perfect,
         great: data.song_one_great,
         good: data.song_one_good,
@@ -378,6 +378,7 @@ const Qualifiers = () => {
       },
       song_two: {
         version: data.song_two_version,
+        name: data.song_two_name,
         perfect: data.song_two_perfect,
         great: data.song_two_great,
         good: data.song_two_good,
