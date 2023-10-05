@@ -1,12 +1,4 @@
 import {
-  ArrowBackIcon,
-  CheckIcon,
-  LinkIcon,
-  ViewIcon,
-  ViewOffIcon,
-  WarningIcon,
-} from '@chakra-ui/icons';
-import {
   Container,
   Flex,
   Heading,
@@ -23,6 +15,7 @@ import {
   Divider,
   FormErrorMessage,
   useToast,
+  Icon,
 } from '@chakra-ui/react';
 import { LoaderFunction, json } from '@remix-run/node';
 import {
@@ -44,6 +37,16 @@ import {
 } from '~/utils/rating';
 import { qualifierDifficulty } from '~/utils/qualifierSongs';
 import { useState } from 'react';
+import {
+  FaArrowLeft,
+  FaCircleCheck,
+  FaDiscord,
+  FaFileExcel,
+  FaGoogle,
+  FaLink,
+  FaRegEye,
+  FaRegEyeSlash,
+} from 'react-icons/fa6';
 
 const fadeInHero = keyframes({
   '0%': {
@@ -92,6 +95,7 @@ const Qualifiers = () => {
     register,
     watch,
     resetField,
+    setValue,
     formState: { errors, isSubmitting, isDirty, isSubmitSuccessful },
   } = useForm({
     defaultValues: {
@@ -253,12 +257,13 @@ const Qualifiers = () => {
         <Flex justifyContent="space-between" align="center" mb={12}>
           <Link as={RemixLink} to="/" color="green.200" textDecor="underline">
             <Flex alignItems="center" mr={8}>
-              <ArrowBackIcon mr={3} />
+              <Icon as={FaArrowLeft} mr={3} />
               <Text fontWeight="bold">Back to Home</Text>
             </Flex>
           </Link>
           {!session?.user ? (
-            <Button colorScheme="green" onClick={onAuthenticate}>
+            <Button colorScheme="green" onClick={onAuthenticate} p={5}>
+              <Icon as={FaGoogle} mr={3} />
               Sign in with Google
             </Button>
           ) : (
@@ -283,7 +288,8 @@ const Qualifiers = () => {
           >
             {!session?.user ? (
               <Stack py={12}>
-                <WarningIcon
+                <Icon
+                  as={FaFileExcel}
                   boxSize={36}
                   mb={6}
                   marginLeft="auto"
@@ -300,10 +306,15 @@ const Qualifiers = () => {
                 align="center"
                 flexDir="column"
               >
-                <CheckIcon boxSize={32} mb={12} />
-                <Heading textAlign="center" fontSize="3xl">
+                <Icon as={FaCircleCheck} boxSize={32} mb={12} />
+                <Heading textAlign="center" fontSize="3xl" mb={8}>
                   Your qualifier was submitted successfully!
                 </Heading>
+                <Link href="https://discord.gg/NuTZRAnUx" target="_blank">
+                  <Button colorScheme="blue">
+                    <Icon mr={3} as={FaDiscord} /> Join the Discord
+                  </Button>
+                </Link>
               </Flex>
             ) : (
               <Stack>
@@ -318,7 +329,11 @@ const Qualifiers = () => {
                       }
                     >
                       <Text mr={2}>{showInformation ? 'Hide' : 'Show'} </Text>
-                      {showInformation ? <ViewOffIcon /> : <ViewIcon />}
+                      {showInformation ? (
+                        <Icon as={FaRegEye} />
+                      ) : (
+                        <Icon as={FaRegEyeSlash} />
+                      )}
                     </Button>
                   )}
                 </HStack>
@@ -440,7 +455,7 @@ const Qualifiers = () => {
                     target="_blank"
                   >
                     <Button variant="link" colorScheme="blue" size="sm">
-                      <LinkIcon mr={1} /> Phoenix Score Converter
+                      <Icon as={FaLink} mr={1} /> Phoenix Score Converter
                     </Button>
                   </a>
                 </HStack>
@@ -450,6 +465,7 @@ const Qualifiers = () => {
                     previousScore={data?.song_one?.score}
                     watch={watch}
                     register={register}
+                    setValue={setValue}
                     resetField={resetField}
                     isEditable={data.song_one === undefined}
                     isSubmitting={isSubmitting}
@@ -461,6 +477,7 @@ const Qualifiers = () => {
                     previousScore={data?.song_two?.score}
                     watch={watch}
                     register={register}
+                    setValue={setValue}
                     resetField={resetField}
                     isEditable={data.song_two === undefined}
                     isSubmitting={isSubmitting}

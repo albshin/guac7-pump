@@ -14,6 +14,7 @@ import {
   UseFormRegister,
   FieldErrors,
   UseFormResetField,
+  UseFormSetValue,
 } from 'react-hook-form';
 import { qualifierSongs, qualifierTotalNotes } from '~/utils/qualifierSongs';
 import FileUpload from './FileUpload';
@@ -41,6 +42,7 @@ interface SongQualiferProps {
   register: UseFormRegister<any>;
   watch: any;
   resetField: UseFormResetField<any>;
+  setValue: UseFormSetValue<any>;
   isEditable?: boolean;
   errors: FieldErrors<any>;
   isSubmitting: boolean;
@@ -90,6 +92,7 @@ const SongQualifier = ({
   errors,
   watch,
   resetField,
+  setValue,
   isSubmitting,
   isEditable = true,
   index,
@@ -107,8 +110,14 @@ const SongQualifier = ({
   const handleOnEdit = () => {
     resetField(scoreId, { defaultValue: 0 });
     breakdownValues.forEach((breakdown) => {
-      resetField(`song_${index}_${breakdown.field}`, { defaultValue: 0 });
+      const fieldId = `song_${index}_${breakdown.field}`;
+      resetField(fieldId, {
+        defaultValue: null,
+      });
+      setValue(fieldId, null);
     });
+    resetField(scoreId, { defaultValue: null });
+    setValue(scoreId, null);
     setEditable(true);
   };
 

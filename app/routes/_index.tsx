@@ -6,6 +6,7 @@ import {
   Flex,
   HStack,
   Heading,
+  Icon,
   Image,
   Link,
   SimpleGrid,
@@ -29,11 +30,12 @@ import guac7GauntletSchedule from './assets/guac7GauntletSchedule.png';
 import guac7ProSchedule from './assets/guac7ProSchedule.png';
 import PrizePool from '../components/PrizePool';
 import {
-  InfoIcon,
-  AtSignIcon,
-  PlusSquareIcon,
-  ViewIcon,
-} from '@chakra-ui/icons';
+  FaBookBookmark,
+  FaDiscord,
+  FaEarthAmericas,
+  FaMoneyBillWave,
+  FaRecordVinyl,
+} from 'react-icons/fa6';
 import { Link as RemixLink, useLoaderData } from '@remix-run/react';
 import { motion } from 'framer-motion';
 import { qualifierSongs } from '~/utils/qualifierSongs';
@@ -152,6 +154,11 @@ const Index = () => {
               Submit Qualifiers
             </Button>
           </Link>
+          <Link href="https://discord.gg/X9S3Wakqn" target="_blank" flex="1">
+            <Button size="lg" colorScheme="blue" w="100%">
+              <Icon as={FaDiscord} mr={3} /> Discord
+            </Button>
+          </Link>
         </Stack>
         <Stack
           direction={['column', 'column', 'row']}
@@ -163,7 +170,7 @@ const Index = () => {
           <Stack flex="1" gap={6} py={8}>
             <Box>
               <Flex alignItems={'center'} mb={1}>
-                <AtSignIcon mr={3} color="green.500" />
+                <Icon as={FaEarthAmericas} mr={3} color="green.500" />
                 <Text fontWeight="bold" fontSize="xl">
                   Regional Competition
                 </Text>
@@ -175,7 +182,7 @@ const Index = () => {
             </Box>
             <Box>
               <Flex alignItems={'center'} mb={1}>
-                <PlusSquareIcon mr={3} color="green.500" />
+                <Icon as={FaMoneyBillWave} mr={3} color="green.500" />
                 <Text fontWeight="bold" fontSize="lg">
                   Prize Pool
                 </Text>
@@ -187,7 +194,7 @@ const Index = () => {
             </Box>
             <Box>
               <Flex alignItems={'center'} mb={1}>
-                <ViewIcon mr={3} color="green.500" />
+                <Icon as={FaRecordVinyl} mr={3} color="green.500" />
                 <Text fontWeight="bold" fontSize="lg">
                   Improved Stream
                 </Text>
@@ -196,7 +203,7 @@ const Index = () => {
             </Box>
             <Box>
               <Flex alignItems={'center'} mb={1}>
-                <InfoIcon mr={3} color="green.500" />
+                <Icon as={FaBookBookmark} mr={3} color="green.500" />
                 <Text fontWeight="bold" fontSize="lg">
                   Updated Ruleset
                 </Text>

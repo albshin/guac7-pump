@@ -6,14 +6,15 @@ import {
   Link,
   keyframes,
   Box,
+  Icon,
 } from '@chakra-ui/react';
 import { Link as RemixLink } from '@remix-run/react';
 import Markdown from 'react-markdown';
 import ChakraUIRenderer from '~/chakraMarkdown';
 import gfm from 'remark-gfm';
-import { ArrowBackIcon } from '@chakra-ui/icons';
 import { motion, useScroll } from 'framer-motion';
 import styled from '@emotion/styled';
+import { FaArrowLeft } from 'react-icons/fa6';
 
 const markdown = `
 ### ℹ️ General Information
@@ -345,7 +346,7 @@ const Rules = () => {
       <Container py="12" maxW="container.lg">
         <Link as={RemixLink} to="/" color="green.200" textDecor="underline">
           <Flex alignItems="center" mb={12}>
-            <ArrowBackIcon mr={3} />
+            <Icon as={FaArrowLeft} mr={3} />
             <Text fontWeight="bold">Back to Home</Text>
           </Flex>
         </Link>

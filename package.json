@@ -9,7 +9,6 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@chakra-ui/icons": "^2.1.1",
     "@chakra-ui/react": "^2.3.6",
     "@chakra-ui/system": "^2.6.1",
     "@emotion/cache": "^11.10.4",
@@ -29,6 +28,7 @@
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
     "react-hook-form": "^7.47.0",
+    "react-icons": "^4.11.0",
     "react-markdown": "^6.0.3",
     "remark-gfm": "^1.0.0"
   },
