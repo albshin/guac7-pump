@@ -110,6 +110,7 @@ Photos are required with every score submission. Rules for photo submissions:
 - **Difficulty Range**
   - **General**: S13 - S21
   - **Grand Finals**: S20 - D21
+- **Song Weights**: See section at bottom
 
 #### Waterfall
 Players will be seeded into a pool based on their qualifier scores. Four songs will be played each round. Players will then be awarded points based on their score on each song in comparison to other players in the pool.
@@ -157,6 +158,7 @@ During the final pool of the gauntlet, the top two players from this pool will a
   - **Winner's Finals**: S24 - D26 
   - **Loser's Finals**: S25 - D26 
   - **Grand Finals**: S25/D25+ 
+- **Song Weights**: See section at bottom
 
 #### Card Draw
 GUAC 7 introduces new rules to reduce the amount of duplicate songs and add more strategy into the tournament
@@ -186,38 +188,109 @@ GUAC 7 introduces new rules to reduce the amount of duplicate songs and add more
     - Grand Finals: 1 (no split)
 
 #### Best of 3 (BO3)
+
+**Phases**
+1. Ban
+1. Re-Draw
+1. Pick (if needed)
+1. Higher Seed Preferences
+1. Play
+
+**Description**
+
 5 songs will be drawn and 2 songs will be banned. Players will then choose to re-draw if they have any reminaing. Lower seed bans/re-draws first.
 
-If playing singles, higher seed chooses which side to play on. If playing doubles, higher seed chooses who plays first. 
+Each player picks one song to play. After a re-draw, the player can opt to choose the song as their pick.
+Otherwise, lower seed picks one song first and then higher seed. The remaining song is used as a tiebreaker.
+
+Higher seed chooses which side to play on. Higher seed chooses who plays first. 
+
+**Procedure**
 
 1. Lower seed bans
 1. Higher seed bans
-1. Lower seed optionally uses re-draw if they have any remaining
-1. Higher seed optionally uses re-draw if they have any remaining
-1. Lower seed optionally uses re-draw if they have any remaining
-1. Higher seed optionally uses re-draw if they have any remaining
+1. Lower seed optionally uses re-draws if they have any remaining
+1. Higher seed optionally uses re-draws if they have any remaining
+1. Lower seed picks a song if needed
+1. Higher seed picks a song if needed
 1. Higher seed chooses which side to play on
-1. Players play singles charts
 1. Higher seed chooses who plays first
-1. Players play doubles charts
+1. Players play the 3 songs from left to right
 
 #### Best of 5 (BO5)
+**Phases**
+1. Ban
+1. Re-Draw
+1. Pick (if needed)
+1. Higher Seed Preferences
+1. Play
+
+**Description**
+
 9 songs will be drawn and 4 songs will be banned. Players will then choose to re-draw if they have any remaining. Lower seed bans/re-draws first.
 
-If playing singles, higher seed chooses which side to play on. If playing doubles, higher seed chooses who plays first. 
+Each player picks one song to play. After a re-draw, the player can opt to choose the song as their pick.
+Otherwise, lower seed picks one song first and then higher seed. The remaining songs are played from left to right.
+
+Higher seed chooses which side to play on. Higher seed chooses who plays first. 
+
+**Procedure**
 
 1. Lower seed bans
 1. Higher seed bans
 1. Lower seed bans
 1. Higher seed bans
-1. Lower seed optionally uses re-draw if they have any remaining
-1. Higher seed optionally uses re-draw if they have any remaining
-1. Lower seed optionally uses re-draw if they have any remaining
-1. Higher seed optionally uses re-draw if they have any remaining
+1. Lower seed optionally uses re-draws if they have any remaining
+1. Higher seed optionally uses re-draws if they have any remaining
+1. Lower seed picks a song if needed
+1. Higher seed picks a song if needed
 1. Higher seed chooses which side to play on
-1. Players play singles charts
 1. Higher seed chooses who plays first
-1. Players play doubles charts
+1. Players play the 5 songs from left to right
+
+### 🏋️ Song Weights
+*Subject to change*
+
+**Standard Weights**
+- 2 Difficulties
+  - **Back Heavy**: 70%/30%
+  - **Even**: 50%/50%
+  - **Front Heavy**: 30%/70%
+- 3 Difficulties
+  - **Back Heavy**: 60%/30%/10%
+  - **Middle Heavy**: 30%/60%/10% 
+  - **Front Heavy**: 20%/40%/40%
+
+#### Gauntlet
+
+| Pool    | Difficulties | Weights     |
+|---------|--------------|-------------|
+| Pool 1  | 13/14/15     | 60%/30%/10% |
+| Pool 2  | 14/15        | 70%/30%     |
+| Pool 3  | 14/15/16     | 20%/40%/40% |
+| Pool 4  | 15/16        | 50%/50%     |
+| Pool 5  | 15/16/17     | 20%/40%/40% |
+| Pool 6  | 16/17        | 30%/70%     |
+| Pool 7  | 16/17/18     | 20%/40%/40% |
+| Pool 8  | 17/18/19     | 20%/40%/40% |
+| Pool 9  | 19/20        | 30%/70%     |
+| Pool 10 | 20/21        | 50%/50%     |
+
+#### Pro Division
+
+| Round                 | Difficulties | Weights     |
+|-----------------------|--------------|-------------|
+| Winner's R1           | 21/22/23     | 60%/30%/10% |
+| Winner's Quarters     | 22/23/24     | 30%/60%/10% |
+| Loser's R1            | 22/23/24     | 60%/30%/10% |
+| Loser's R2            | 23/24        | 70%/30%     |
+| Winner's Semis        | 23/24/25     | 30%/60%/10% |
+| Loser's Quarters      | 23/24/25     | 30%/60%/10% |
+| Loser's Semis         | 24/25        | 70%/30%     |
+| Winner's Finals       | 25/26        | 70%/30%     |
+| Loser's Finals        | 25/26        | 70%/30%     |
+| Grand Finals          | 25/26+       | 50%/50%     |
+
 `;
 const fadeInHero = keyframes({
   '0%': {
