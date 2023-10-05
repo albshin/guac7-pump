@@ -159,7 +159,7 @@ export const defaults: any = {
     const sizes = ['2xl', 'xl', 'lg', 'md', 'sm', 'xs'];
     return (
       <Heading
-        my={6}
+        my={5}
         as={`h${level}`}
         size={sizes[`${level - 1}`]}
         {...getCoreProps(props)}
