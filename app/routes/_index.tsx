@@ -154,7 +154,7 @@ const Index = () => {
               Submit Qualifiers
             </Button>
           </Link>
-          <Link href="https://discord.gg/X9S3Wakqn" target="_blank" flex="1">
+          <Link href="https://discord.gg/4MZXqJbgz" target="_blank" flex="1">
             <Button size="lg" colorScheme="blue" w="100%">
               <Icon as={FaDiscord} mr={3} /> Discord
             </Button>

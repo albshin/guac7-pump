@@ -310,7 +310,7 @@ const Qualifiers = () => {
                 <Heading textAlign="center" fontSize="3xl" mb={8}>
                   Your qualifier was submitted successfully!
                 </Heading>
-                <Link href="https://discord.gg/NuTZRAnUx" target="_blank">
+                <Link href="https://discord.gg/4MZXqJbgz" target="_blank">
                   <Button colorScheme="blue">
                     <Icon mr={3} as={FaDiscord} /> Join the Discord
                   </Button>
