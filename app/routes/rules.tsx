@@ -130,7 +130,7 @@ At the end of each pool, the total amount of points per player will be summed. T
 
 **Tiebreaker**
 
-In the case a tiebraeker is needed, one random song will be drawn with the same difficulty settings as the current pool. The player with the higher score wins. This can be repeated until the tie is broken.
+In the case a tiebreaker is needed, one random song will be drawn with the same difficulty settings as the current pool. The player with the higher score wins. This can be repeated until the tie is broken.
 
 #### Promotion Pool
 During the final pool of the gauntlet, the top two players from this pool will advance and be seeded into the bottom of Pro Division.
