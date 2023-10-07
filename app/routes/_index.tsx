@@ -4,7 +4,6 @@ import {
   Button,
   Container,
   Flex,
-  HStack,
   Heading,
   Icon,
   Image,
@@ -26,6 +25,7 @@ import hero from './assets/guHero.png';
 import guLogo from './assets/gulogo.png';
 import jaekim from './assets/jaekim.png';
 import graeme from './assets/graeme.png';
+import tusa from './assets/tusa.png';
 import guac7GauntletSchedule from './assets/guac7GauntletSchedule.png';
 import guac7ProSchedule from './assets/guac7ProSchedule.png';
 import PrizePool from '../components/PrizePool';
@@ -188,7 +188,7 @@ const Index = () => {
                 </Text>
               </Flex>
               <Text>
-                Featuring a $250 base prize pool! The top 5 players will receive
+                Featuring a $400 base prize pool! The top 5 players will receive
                 payouts
               </Text>
             </Box>
@@ -256,6 +256,7 @@ const Index = () => {
                 name: 'TUSA',
                 location: 'Dallas, TX',
                 subtitle: ['🥉 GUAC 6', 'BITE 6 Commentary'],
+                picture: tusa,
               },
             ].map((player, i) => (
               <motion.div

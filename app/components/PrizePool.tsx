@@ -6,7 +6,7 @@ const PrizePool = () => {
 
   // TODO: Replace with fetch from start.gg
   useEffect(() => {
-    const delay = setTimeout(() => setProgress(31), 800);
+    const delay = setTimeout(() => setProgress(56), 800);
 
     return () => {
       clearTimeout(delay);
@@ -23,9 +23,9 @@ const PrizePool = () => {
         entrants!
       </Text>
       <Flex justifyContent="space-between" mb={2} fontWeight="bold">
-        <Text>$250</Text>
-        <Text>$325</Text>
-        <Text>$400</Text>
+        <Text flexBasis="78%">$400</Text>
+        <Text flex="1">$475</Text>
+        <Text>$550</Text>
       </Flex>
       <Progress
         value={progress}

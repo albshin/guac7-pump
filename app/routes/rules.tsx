@@ -36,9 +36,9 @@ If you have any questions about the ruleset or tournament, please reach out to m
 Prize pool will increase based on number of entrants.
 
 **Prize Pool**
-- **Base**: $250
-- **25 Entrants**: $325
-- **32 Entrants**: $400
+- **Base**: $400
+- **25 Entrants**: $475
+- **32 Entrants**: $550
 
 **Split**
 - **1st Place**: 40%
