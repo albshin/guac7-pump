@@ -15,7 +15,7 @@ export const qualifierTotalNotes = {
   'Nihilism -Another Ver.-': 1147,
   Sarabande: 1111,
   Skeptic: 1131,
-  Achluoias: 1500,
+  Achluoias: 1400,
 };
 
 export const qualifierBaseRating = {
