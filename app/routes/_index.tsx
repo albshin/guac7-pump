@@ -240,7 +240,6 @@ const Index = () => {
                 subtitle: ['🥈 GUAC 6', 'BITE 6 Commentary'],
                 picture: jaekim,
               },
-              { name: 'Another86', location: 'NYC', subtitle: ['🥈 BITE 6'] },
               {
                 name: '4199',
                 location: 'Vancouver, BC',
