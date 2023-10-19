@@ -26,6 +26,7 @@ import guLogo from './assets/gulogo.png';
 import jaekim from './assets/jaekim.png';
 import graeme from './assets/graeme.png';
 import tusa from './assets/tusa.png';
+import sel from './assets/sel.png';
 import guac7GauntletSchedule from './assets/guac7GauntletSchedule.png';
 import guac7ProSchedule from './assets/guac7ProSchedule.png';
 import PrizePool from '../components/PrizePool';
@@ -250,6 +251,7 @@ const Index = () => {
                 name: 'Sel',
                 location: 'Oregon',
                 subtitle: ['Expert 3', 'First East Coast Apperance'],
+                picture: sel,
               },
               {
                 name: 'TUSA',
