@@ -313,7 +313,7 @@ const Index = () => {
             <Tbody>
               {data.map((qualifier: any, i: number) => (
                 <Tr key={qualifier.email} fontWeight="semibold">
-                  <Td>{`${i <= 9 && '⭐ '}${i + 1}`}</Td>
+                  <Td>{`${i <= 9 ? '⭐ ' : ''}${i + 1}`}</Td>
                   <Td>{qualifier.username}</Td>
                   <Td>{qualifier.total_rating}</Td>
                   <Td fontSize="sm">
