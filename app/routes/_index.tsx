@@ -104,7 +104,15 @@ export const loader: LoaderFunction = async ({ request }) => {
     .neq('total_rating', 0)
     .order('total_rating', { ascending: false });
 
-  return json({ data: data ?? [] }, { headers: response.headers });
+  const newData = data?.sort(
+    (a, b) =>
+      b.total_rating - a.total_rating ||
+      b.song_one.score +
+        b.song_two.score -
+        (a.song_one.score + a.song_two.score)
+  );
+
+  return json({ data: newData ?? [] }, { headers: response.headers });
 };
 
 const Index = () => {

@@ -192,8 +192,7 @@ GUAC 7 introduces new rules to reduce the amount of duplicate songs and add more
 
 **Phases**
 1. Ban
-1. Re-Draw
-1. Pick (if needed)
+1. Re-Draw/Pick
 1. Higher Seed Preferences
 1. Play
 
@@ -211,9 +210,9 @@ Higher seed chooses which side to play on. Higher seed chooses who plays first.
 1. Lower seed bans
 1. Higher seed bans
 1. Lower seed optionally uses re-draws if they have any remaining
+1. Lower seed picks a song
 1. Higher seed optionally uses re-draws if they have any remaining
-1. Lower seed picks a song if needed
-1. Higher seed picks a song if needed
+1. Higher seed picks a song
 1. Higher seed chooses which side to play on
 1. Higher seed chooses who plays first
 1. Players play the 3 songs from left to right
@@ -221,8 +220,7 @@ Higher seed chooses which side to play on. Higher seed chooses who plays first.
 #### Best of 5 (BO5)
 **Phases**
 1. Ban
-1. Re-Draw
-1. Pick (if needed)
+1. Re-Draw/Pick
 1. Higher Seed Preferences
 1. Play
 
@@ -242,9 +240,9 @@ Higher seed chooses which side to play on. Higher seed chooses who plays first.
 1. Lower seed bans
 1. Higher seed bans
 1. Lower seed optionally uses re-draws if they have any remaining
+1. Lower seed picks a song
 1. Higher seed optionally uses re-draws if they have any remaining
-1. Lower seed picks a song if needed
-1. Higher seed picks a song if needed
+1. Higher seed picks a song
 1. Higher seed chooses which side to play on
 1. Higher seed chooses who plays first
 1. Players play the 5 songs from left to right
