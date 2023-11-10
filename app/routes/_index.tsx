@@ -102,6 +102,7 @@ export const loader: LoaderFunction = async ({ request }) => {
     .from('qualifiers')
     .select('*')
     .neq('total_rating', 0)
+    .is('hidden', null)
     .order('total_rating', { ascending: false });
 
   const newData = data?.sort(
